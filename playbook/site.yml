@@ -1,0 +1,14 @@
+---
+- hosts: openvpn
+  user: "{{ myuser | default('vagrant') }}"
+  sudo: yes
+  roles:
+    - common
+    - openvpn
+
+- hosts: dell
+  user: "{{ myuser | default('ubuntu') }}"
+  sudo: yes
+  roles:
+    - common
+    - dell

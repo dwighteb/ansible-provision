@@ -1,0 +1,39 @@
+---
+# Dell tasks
+- name: install role specific serverspec file
+  copy: src=dell_spec.rb dest=/opt/serverspec/spec/localhost/dell_spec.rb owner=root group=root mode=0644
+- name: add apt keys
+  apt_key: url=https://www.virtualbox.org/download/oracle_vbox.asc state=present
+- name: add apt repositories
+  apt_repository: repo="{{ item }}" state=present
+  with_items:
+    - 'ppa:ansible/ansible'
+    - 'deb http://download.virtualbox.org/virtualbox/debian trusty contrib'
+- name: ensure packages are installed
+  apt: name={{ item }} state=installed
+  with_items:
+    - anacron
+    - ansible
+    - apt-cacher-ng
+    - git
+    - smartmontools
+    - squid-deb-proxy-client
+    - virtualbox-5.0
+- name: enable smartmontools
+  lineinfile: dest=/etc/default/smartmontools regexp=^start_smartd line='start_smartd=yes'
+  notify:
+    - restart smartmontools
+- name: Check if vagrant is installed
+  command: dpkg-query -W vagrant
+  register: vagrant_check_deb
+  failed_when: vagrant_check_deb.rc > 1
+  changed_when: vagrant_check_deb.rc == 1
+- name: Download my_package
+  get_url:
+    url="http://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4_x86_64.deb"
+    dest="/home/dwighteb/vagrant_1.7.4_x86_64.deb"
+  when: vagrant_check_deb.rc == 1
+- name: Install my_package
+  apt: deb="/home/dwighteb/vagrant_1.7.4_x86_64.deb"
+  sudo: true
+  when: vagrant_check_deb.rc == 1

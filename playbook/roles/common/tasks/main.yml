@@ -1,0 +1,86 @@
+---
+# Common tasks
+- include_vars: secrets.yml
+  no_log: true
+- name: ensure packages are installed
+  apt: name={{ item }} state=installed
+  with_items:
+    - acpid
+    - fail2ban
+    - libpam-google-authenticator
+    - logcheck
+    - mutt
+    - ntp
+    - rake
+    - ruby
+    - sysstat
+- name: ensure net-ssh version 2.9.2 is installed
+  gem: name=net-ssh version=2.9.2 state=present user_install=no
+- name: ensure gems are installed
+  gem: name={{ item }} state=present user_install=no
+  with_items:
+    - serverspec
+- file: path=/opt/serverspec/spec/localhost state=directory owner=root group=root mode=0755
+- name: install serverspec files
+  copy: src=serverspec/{{ item }} dest=/opt/serverspec/{{ item }} owner=root group=root mode=0644
+  with_items:
+    - Rakefile
+    - .rspec
+    - spec/spec_helper.rb
+    - spec/localhost/default_spec.rb
+- name: configure pam.d sshd
+  lineinfile: dest=/etc/pam.d/sshd line='auth required pam_google_authenticator.so'
+  notify:
+    - restart ssh
+- name: configure sshd
+  lineinfile: dest=/etc/ssh/sshd_config regexp={{ item.regexp }} line="{{ item.line }}"
+  notify:
+    - restart ssh
+  with_items:
+    - { regexp: '^ChallengeResponseAuthentication', line: 'ChallengeResponseAuthentication yes' }
+    - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication yes' }
+    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
+    - { regexp: '^UseDNS', line: 'UseDNS no' }
+- name: configure sudo
+  copy:
+    content: "{{ sudoers_90_admin }}"
+    dest: /etc/sudoers.d/90-admin
+    owner: root
+    group: root
+    mode: 0440
+- name: enable sysstat
+  lineinfile: dest=/etc/default/sysstat regexp=^ENABLED line='ENABLED=true'
+  notify:
+    - restart sysstat
+- name: add my user dwighteb
+  user: name=dwighteb shell=/bin/bash comment="Dwight Barnette" uid=1100 password="{{ dwighteb_password }}" groups=adm,sudo
+- name: authorized key file for dwighteb
+  authorized_key: user=dwighteb key="{{ item }}"
+  with_file:
+    - public_keys/dbs-ipad-20141231
+    - public_keys/dbs-iphone-20141231
+    - public_keys/dbs-mbp3-20141231
+    - public_keys/dwighteb-mbp1-20131224
+- name: remove root password
+  user: name=root password='*'
+- name: add my user ubuntu
+  user: name=ubuntu shell=/bin/bash comment="ubuntu user" password="{{ ubuntu_password }}" groups=adm,sudo
+- name: authorized key file for ubuntu
+  authorized_key: user=ubuntu key="{{ item }}"
+  with_file:
+    - public_keys/dbs-mbp3-20141231
+    - public_keys/VPC-key-20131224
+- name: dwighteb google authenticator file
+  copy:
+    content: "{{ dwighteb_google_authenticator }}"
+    dest: /home/dwighteb/.google_authenticator
+    owner: dwighteb
+    group: dwighteb
+    mode: 0400
+- name: ubuntu google authenticator file
+  copy:
+    content: "{{ ubuntu_google_authenticator }}"
+    dest: /home/ubuntu/.google_authenticator
+    owner: ubuntu
+    group: ubuntu
+    mode: 0400
