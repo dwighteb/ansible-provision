@@ -1,4 +1,6 @@
 ---
 # Dell handlers
+- name: restart nginx
+  service: name=nginx state=restarted
 - name: restart smartmontools
   service: name=smartmontools state=restarted

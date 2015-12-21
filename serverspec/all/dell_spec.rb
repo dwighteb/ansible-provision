@@ -5,6 +5,10 @@ packages = [
   'ansible',
   'apt-cacher-ng',
   'git',
+  'jenkins',
+  'nginx',
+  'openjdk-7-jdk',
+  'openjdk-7-jre',
   'smartmontools',
   'squid-deb-proxy-client',
   'vagrant',
@@ -12,6 +16,7 @@ packages = [
 
 services = [
   'apt-cacher-ng',
+  'jenkins',
   'smartmontools']
 
 packages.each do |pkg|
@@ -37,6 +42,26 @@ describe file('/etc/apt/sources.list.d/download_virtualbox_org_virtualbox_debian
   its(:content) { should match /deb http:\/\/download.virtualbox.org\/virtualbox\/debian/ }
 end
 
-describe port(3142) do
+describe file('/etc/nginx/conf.d/jenkins.conf') do
+  it { should exist }
+  its(:content) { should match /server 127.0.0.1:8080/ }
+end
+
+['80', '3142'].each do |portno|
+  describe port(portno) do
+    it { should be_listening.with('tcp') }
+  end
+end
+
+describe port('3142') do
   it { should be_listening.with('tcp') }
+end
+
+describe port('8080') do
+  it { should be_listening.with('tcp6') }
+end
+
+describe user('jenkins') do
+  it { should exist }
+  its(:encrypted_password) { should match(/^.{0,2}$/) }
 end
