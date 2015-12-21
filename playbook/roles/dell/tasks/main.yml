@@ -34,7 +34,13 @@
   notify:
     - restart nginx
 - name: create nginx jenkins configuration file
-  copy: src=jenkins.conf dest=/etc/nginx/conf.d/jenkins.conf owner=root group=root mode=0644
+  copy: src=nginx/jenkins.conf dest=/etc/nginx/conf.d/jenkins.conf owner=root group=root mode=0644
+  notify:
+    - restart nginx
+- name: modify jenkins default file
+  copy: src=default/jenkins dest=/etc/default/jenkins owner=root group=root mode=0644
+  notify:
+    - restart jenkins
 - name: enable smartmontools
   lineinfile: dest=/etc/default/smartmontools regexp=^start_smartd line='start_smartd=yes'
   notify:

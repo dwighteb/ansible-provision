@@ -17,6 +17,7 @@ packages = [
 services = [
   'apt-cacher-ng',
   'jenkins',
+  'nginx',
   'smartmontools']
 
 packages.each do |pkg|
@@ -47,14 +48,15 @@ describe file('/etc/nginx/conf.d/jenkins.conf') do
   its(:content) { should match /server 127.0.0.1:8080/ }
 end
 
+describe file('/etc/default/jenkins') do
+  it { should exist }
+  its(:content) { should match /JENKINS_ARGS.*--httpListenAddress=127.0.0.1/ }
+end
+
 ['80', '3142'].each do |portno|
   describe port(portno) do
     it { should be_listening.with('tcp') }
   end
-end
-
-describe port('3142') do
-  it { should be_listening.with('tcp') }
 end
 
 describe port('8080') do
