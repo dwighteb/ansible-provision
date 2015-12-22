@@ -1,0 +1,1 @@
+../../all/default_spec.rb

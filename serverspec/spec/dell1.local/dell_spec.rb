@@ -1,0 +1,1 @@
+../../all/dell_spec.rb
