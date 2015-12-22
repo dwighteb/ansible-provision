@@ -46,16 +46,16 @@
   notify:
     - restart smartmontools
 - name: Check if vagrant is installed
-  command: dpkg-query -W vagrant
+  shell: dpkg-query -W vagrant | grep -E '^vagrant.*1.8.0$'
   register: vagrant_check_deb
   failed_when: vagrant_check_deb.rc > 1
   changed_when: vagrant_check_deb.rc == 1
 - name: Download my_package
   get_url:
-    url="http://releases.hashicorp.com/vagrant/1.7.4/vagrant_1.7.4_x86_64.deb"
-    dest="/home/dwighteb/vagrant_1.7.4_x86_64.deb"
+    url="http://releases.hashicorp.com/vagrant/1.8.0/vagrant_1.8.0_x86_64.deb"
+    dest="/tmp/vagrant_1.8.0_x86_64.deb"
   when: vagrant_check_deb.rc == 1
 - name: Install my_package
-  apt: deb="/home/dwighteb/vagrant_1.7.4_x86_64.deb"
+  apt: deb="/tmp/vagrant_1.8.0_x86_64.deb"
   sudo: true
   when: vagrant_check_deb.rc == 1

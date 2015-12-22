@@ -11,7 +11,6 @@ packages = [
   'openjdk-7-jre',
   'smartmontools',
   'squid-deb-proxy-client',
-  'vagrant',
   'virtualbox-5.0']
 
 services = [
@@ -31,6 +30,10 @@ services.each do |svc|
     it { should be_enabled }
     it { should be_running }
   end
+end
+
+describe package('vagrant') do
+  it { should be_installed.with_version('1:1.8.0') }
 end
 
 describe ppa('ansible/ansible') do
