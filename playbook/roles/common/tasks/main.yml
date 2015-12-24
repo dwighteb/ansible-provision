@@ -12,6 +12,13 @@
     - mutt
     - ntp
     - sysstat
+- name: configure fail2ban
+  copy: src=fail2ban/{{ item }} dest=/etc/fail2ban/{{ item }} owner=root group=root mode=0644
+  notify:
+    - restart fail2ban
+  with_items:
+    - filter.d/fail2ban.conf
+    - jail.d/fail2ban.conf
 - name: configure pam.d sshd
   lineinfile: dest=/etc/pam.d/sshd line='auth required pam_google_authenticator.so'
   notify:
