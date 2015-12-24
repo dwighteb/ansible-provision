@@ -16,12 +16,7 @@ end
 
 describe port(443) do
   it { should be_listening.with('tcp') }
-end
-
-[443, 1194].each do |portno|
-  describe port(portno) do
-    it { should be_listening.with('udp') }
-  end
+  it { should be_listening.with('udp') }
 end
 
 ['/etc/openvpn/crl-clients.pem',
@@ -46,8 +41,7 @@ end
   end
 end
 
-['/etc/openvpn/server-1194-udp.conf',
- '/etc/openvpn/server-443-tcp.conf',
+['/etc/openvpn/server-443-tcp.conf',
  '/etc/openvpn/server-443-udp.conf'].each do |filename|
   describe file(filename) do
     it { should exist }
@@ -58,13 +52,11 @@ end
   end
 end
 
-describe file('/etc/openvpn/ccd/dd-wrt1.atl.dwighteb.com') do
-  it { should exist }
-  it { should be_owned_by 'openvpn' }
-  it { should be_grouped_into 'openvpn' }
-  it { should be_mode 644 }
-  its(:content) { should_not match /iroute 192.168.64.0 255.255.252.0/ }
-  its(:content) { should match /iroute 192.168.69.0 255.255.255.0/ }
+['/etc/openvpn/server-1194-udp.conf',
+ '/etc/openvpn/ccd/dd-wrt1.atl.dwighteb.com'].each do |filename|
+  describe file(filename) do
+    it { should_not exist }
+  end
 end
 
 describe file('/etc/rc.local') do
@@ -83,7 +75,7 @@ describe interface('eth0') do
   it { should be_up }
 end
 
-['tun0', 'tun1', 'tun2'].each do |tunnel|
+['tun0', 'tun1'].each do |tunnel|
   describe interface(tunnel) do
     it { should exist }
   end

@@ -12,17 +12,13 @@
   user: name=openvpn comment="OpenVPN Account" createhome=no home=/nonexistent shell=/usr/sbin/nologin system=yes uid=999
 - name: etc openvpn directory
   file: path=/etc/openvpn state=directory owner=openvpn group=openvpn mode=0755
-- name: etc openvpn ccd directory
-  file: path=/etc/openvpn/ccd state=directory owner=openvpn group=openvpn mode=0755
 - name: openvpn state and log files
   shell: sudo -u openvpn touch /etc/openvpn/{{ item }}
   args:
     creates: /etc/openvpn/{{ item }}
   with_items:
-    - ipp-1194-udp.txt
     - ipp-443-tcp.txt
     - ipp-443-udp.txt
-    - openvpn-status-1194-udp.log
     - openvpn-status-443-tcp.log
     - openvpn-status-443-udp.log
 - name: openvpn configuration files
@@ -32,10 +28,8 @@
   with_items:
     - { name: 'ca-clients.crt', mode: '0644' }
     - { name: 'nat1.crt', mode: '0644' }
-    - { name: 'server-1194-udp.conf', mode: '0640' }
     - { name: 'server-443-tcp.conf', mode: '0640' }
     - { name: 'server-443-udp.conf', mode: '0640' }
-    - { name: 'ccd/dd-wrt1.atl.dwighteb.com', mode: '0644' }
 - name: openvpn crl for clients secret file
   copy: content="{{ crl_clients_pem }}" dest=/etc/openvpn/crl-clients.pem owner=openvpn group=openvpn mode=0600
   notify:
@@ -52,6 +46,13 @@
   copy: content="{{ ta_key }}" dest=/etc/openvpn/ta.key owner=openvpn group=openvpn mode=0600
   notify:
     - restart openvpn
+- name: delete old files
+  file: dest=/etc/openvpn/{{ item }} state=absent
+  notify:
+    - restart openvpn
+  with_items:
+    - server-1194-udp.conf
+    - ccd
 - name: rc.local to execute configure-pat.sh
   copy: src=rc.local dest=/etc/rc.local owner=root group=root mode=0755
 - name: add file configure-pat.sh
