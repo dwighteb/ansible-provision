@@ -26,7 +26,7 @@
     - openvpn-status-443-tcp.log
     - openvpn-status-443-udp.log
 - name: openvpn configuration files
-  copy: src={{ item.name }} dest=/etc/openvpn/{{ item.name }} owner=openvpn group=openvpn mode={{ item.mode }}
+  copy: src=openvpn/{{ item.name }} dest=/etc/openvpn/{{ item.name }} owner=openvpn group=openvpn mode={{ item.mode }}
   notify:
     - restart openvpn
   with_items:

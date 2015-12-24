@@ -76,6 +76,7 @@ describe file('/usr/local/bin/configure-pat.sh') do
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
   it { should be_mode 755 }
+  its(:content) { should_not match /iptables -A INPUT -i eth0 -p tcp -m tcp --dport 80 -j ACCEPT/ }
 end
 
 describe file('/usr/local/etc/blackhole') do
@@ -83,6 +84,7 @@ describe file('/usr/local/etc/blackhole') do
   it { should be_owned_by 'root' }
   it { should be_grouped_into 'root' }
   it { should be_mode 644 }
+  its(:content) { should match /43.229.53.84/ }
   its(:content) { should match /43.229.53.86/ }
 end
 

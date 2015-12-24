@@ -60,11 +60,8 @@ do
 	/sbin/iptables -A INPUT -i ${interface} -j ACCEPT
 done
 /sbin/iptables -A INPUT -i eth0 -p tcp -m tcp --dport 22 -j ACCEPT
-/sbin/iptables -A INPUT -i eth0 -p tcp -m tcp --dport 25 -j ACCEPT
-/sbin/iptables -A INPUT -i eth0 -p tcp -m tcp --dport 80 -j ACCEPT
 /sbin/iptables -A INPUT -i eth0 -p tcp -m tcp --dport 443 -j ACCEPT
 /sbin/iptables -A INPUT -i eth0 -p udp -m udp --dport 443 -j ACCEPT
-/sbin/iptables -A INPUT -i eth0 -p tcp -m tcp --dport 587 -j ACCEPT
 /sbin/iptables -A INPUT -i eth0 -p udp -m udp --dport 1194 -j ACCEPT
 /sbin/iptables -A INPUT -j logdrop
 /sbin/iptables -A OUTPUT -o eth0 -p icmp -m limit --limit 3/s -j ACCEPT
