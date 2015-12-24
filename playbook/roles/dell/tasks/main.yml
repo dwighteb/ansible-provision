@@ -1,7 +1,5 @@
 ---
 # Dell tasks
-- name: install role specific serverspec file
-  copy: src=dell_spec.rb dest=/opt/serverspec/spec/localhost/dell_spec.rb owner=root group=root mode=0644
 - name: ensure packages are installed
   apt: name={{ item }} state=installed
   with_items:
