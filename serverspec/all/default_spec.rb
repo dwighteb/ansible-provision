@@ -8,8 +8,6 @@ packages = [
   'mutt',
   'ntp',
   'openssh-server',
-  'rake',
-  'ruby',
   'sysstat']
 
 services = [
@@ -22,14 +20,6 @@ packages.each do |pkg|
   describe package(pkg), :if => os[:family] == 'ubuntu' do
     it { should be_installed }
   end
-end
-
-describe package('net-ssh') do
-  it { should be_installed.by('gem').with_version('2.9.2') }
-end
-
-describe package('serverspec') do
-  it { should be_installed.by('gem') }
 end
 
 services.each do |svc|

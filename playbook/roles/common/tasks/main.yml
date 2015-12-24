@@ -11,23 +11,7 @@
     - logcheck
     - mutt
     - ntp
-    - rake
-    - ruby
     - sysstat
-- name: ensure net-ssh version 2.9.2 is installed
-  gem: name=net-ssh version=2.9.2 state=present user_install=no
-- name: ensure gems are installed
-  gem: name={{ item }} state=present user_install=no
-  with_items:
-    - serverspec
-- file: path=/opt/serverspec/spec/localhost state=directory owner=root group=root mode=0755
-- name: install serverspec files
-  copy: src=serverspec/{{ item }} dest=/opt/serverspec/{{ item }} owner=root group=root mode=0644
-  with_items:
-    - Rakefile
-    - .rspec
-    - spec/spec_helper.rb
-    - spec/localhost/default_spec.rb
 - name: configure pam.d sshd
   lineinfile: dest=/etc/pam.d/sshd line='auth required pam_google_authenticator.so'
   notify:

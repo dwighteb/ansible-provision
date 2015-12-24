@@ -2,8 +2,6 @@
 # Openvpn tasks
 - include_vars: secrets.yml
   no_log: true
-- name: install role specific serverspec file
-  copy: src=openvpn_spec.rb dest=/opt/serverspec/spec/localhost/openvpn_spec.rb owner=root group=root mode=0644
 - name: add apt key
   apt_key: url=https://swupdate.openvpn.net/repos/repo-public.gpg state=present
 - name: add apt repository
