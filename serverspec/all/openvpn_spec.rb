@@ -20,7 +20,6 @@ describe port(443) do
 end
 
 ['/etc/openvpn/crl-clients.pem',
- '/etc/openvpn/dh2048.pem',
  '/etc/openvpn/nat1.key',
  '/etc/openvpn/ta.key'].each do |filename|
   describe file(filename) do
@@ -32,6 +31,7 @@ end
 end
 
 ['/etc/openvpn/ca-clients.crt',
+ '/etc/openvpn/dh2048.pem',
  '/etc/openvpn/nat1.crt'].each do |filename|
   describe file(filename) do
     it { should exist }
