@@ -28,15 +28,15 @@
   with_items:
     - { name: 'ca-clients.crt', mode: '0644' }
     - { name: 'dh2048.pem', mode: '0644' }
-    - { name: 'nat1.crt', mode: '0644' }
+    - { name: 'nat2.crt', mode: '0644' }
     - { name: 'server-443-tcp.conf', mode: '0640' }
     - { name: 'server-443-udp.conf', mode: '0640' }
 - name: openvpn crl for clients secret file
   copy: content="{{ crl_clients_pem }}" dest=/etc/openvpn/crl-clients.pem owner=openvpn group=openvpn mode=0600
   notify:
     - restart openvpn
-- name: openvpn nat1 private key secret file
-  copy: content="{{ nat1_key }}" dest=/etc/openvpn/nat1.key owner=openvpn group=openvpn mode=0600
+- name: openvpn nat2 private key secret file
+  copy: content="{{ nat2_key }}" dest=/etc/openvpn/nat2.key owner=openvpn group=openvpn mode=0600
   notify:
     - restart openvpn
 - name: openvpn ta key secret file

@@ -20,7 +20,7 @@ describe port(443) do
 end
 
 ['/etc/openvpn/crl-clients.pem',
- '/etc/openvpn/nat1.key',
+ '/etc/openvpn/nat2.key',
  '/etc/openvpn/ta.key'].each do |filename|
   describe file(filename) do
     it { should exist }
@@ -32,7 +32,7 @@ end
 
 ['/etc/openvpn/ca-clients.crt',
  '/etc/openvpn/dh2048.pem',
- '/etc/openvpn/nat1.crt'].each do |filename|
+ '/etc/openvpn/nat2.crt'].each do |filename|
   describe file(filename) do
     it { should exist }
     it { should be_owned_by 'openvpn' }
@@ -49,6 +49,7 @@ end
     it { should be_grouped_into 'openvpn' }
     it { should be_mode 640 }
     its(:content) { should match /tls-version-min 1.2/ }
+    its(:content) { should match /auth SHA256/ }
   end
 end
 
