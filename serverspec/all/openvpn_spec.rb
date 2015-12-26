@@ -19,8 +19,8 @@ describe port(443) do
   it { should be_listening.with('udp') }
 end
 
-['/etc/openvpn/crl-clients.pem',
- '/etc/openvpn/nat2.key',
+['/etc/openvpn/crl.pem',
+ '/etc/openvpn/server.key',
  '/etc/openvpn/ta.key'].each do |filename|
   describe file(filename) do
     it { should exist }
@@ -30,9 +30,9 @@ end
   end
 end
 
-['/etc/openvpn/ca-clients.crt',
+['/etc/openvpn/ca.crt',
  '/etc/openvpn/dh4096.pem',
- '/etc/openvpn/nat2.crt'].each do |filename|
+ '/etc/openvpn/server.crt'].each do |filename|
   describe file(filename) do
     it { should exist }
     it { should be_owned_by 'openvpn' }
@@ -51,6 +51,7 @@ end
     its(:content) { should match /^tls-version-min 1.2/ }
     its(:content) { should match /^auth SHA256/ }
     its(:content) { should match /^dh dh4096.pem/ }
+    its(:content) { should match /^remote-cert-tls client/ }
   end
 end
 

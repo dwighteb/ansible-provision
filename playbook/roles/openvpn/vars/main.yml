@@ -1,4 +1,4 @@
 ---
-crl_clients_pem: "{{ vault_crl_clients_pem }}"
-nat2_key: "{{ vault_nat2_key }}"
+crl_pem: "{{ vault_crl_pem }}"
+server_key: "{{ vault_server_key }}"
 ta_key: "{{ vault_ta_key }}"
