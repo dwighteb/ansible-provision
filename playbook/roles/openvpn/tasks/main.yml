@@ -26,7 +26,7 @@
     - restart openvpn
   with_items:
     - { name: 'ca-clients.crt', mode: '0644' }
-    - { name: 'dh2048.pem', mode: '0644' }
+    - { name: 'dh4096.pem', mode: '0644' }
     - { name: 'nat2.crt', mode: '0644' }
     - { name: 'server-443-tcp.conf', mode: '0640' }
     - { name: 'server-443-udp.conf', mode: '0640' }

@@ -31,7 +31,7 @@ end
 end
 
 ['/etc/openvpn/ca-clients.crt',
- '/etc/openvpn/dh2048.pem',
+ '/etc/openvpn/dh4096.pem',
  '/etc/openvpn/nat2.crt'].each do |filename|
   describe file(filename) do
     it { should exist }
@@ -48,8 +48,9 @@ end
     it { should be_owned_by 'openvpn' }
     it { should be_grouped_into 'openvpn' }
     it { should be_mode 640 }
-    its(:content) { should match /tls-version-min 1.2/ }
-    its(:content) { should match /auth SHA256/ }
+    its(:content) { should match /^tls-version-min 1.2/ }
+    its(:content) { should match /^auth SHA256/ }
+    its(:content) { should match /^dh dh4096.pem/ }
   end
 end
 
