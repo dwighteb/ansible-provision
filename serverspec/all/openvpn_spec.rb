@@ -53,13 +53,6 @@ end
   end
 end
 
-['/etc/openvpn/server-1194-udp.conf',
- '/etc/openvpn/ccd/dd-wrt1.atl.dwighteb.com'].each do |filename|
-  describe file(filename) do
-    it { should_not exist }
-  end
-end
-
 describe file('/etc/rc.local') do
   its(:content) { should match /\/usr\/local\/bin\/configure-pat.sh/ }
 end

@@ -1,6 +1,5 @@
 ---
-# Openvpn tasks
-- include_vars: secrets.yml
+- include_vars: vault.yml
   no_log: true
 - name: add apt key
   apt_key: url=https://swupdate.openvpn.net/repos/repo-public.gpg state=present
@@ -43,13 +42,6 @@
   copy: content="{{ ta_key }}" dest=/etc/openvpn/ta.key owner=openvpn group=openvpn mode=0600
   notify:
     - restart openvpn
-- name: delete old files
-  file: dest=/etc/openvpn/{{ item }} state=absent
-  notify:
-    - restart openvpn
-  with_items:
-    - server-1194-udp.conf
-    - ccd
 - name: rc.local to execute configure-pat.sh
   copy: src=rc.local dest=/etc/rc.local owner=root group=root mode=0755
 - name: add file configure-pat.sh

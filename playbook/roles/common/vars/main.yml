@@ -1,0 +1,6 @@
+---
+dwighteb_google_authenticator: "{{ vault_dwighteb_google_authenticator }}"
+dwighteb_password: "{{ vault_dwighteb_password }}"
+sudoers_90_admin: "{{ vault_sudoers_90_admin }}"
+ubuntu_google_authenticator: "{{ vault_ubuntu_google_authenticator }}"
+ubuntu_password: "{{ vault_ubuntu_password }}"

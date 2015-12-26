@@ -1,6 +1,5 @@
 ---
-# Common tasks
-- include_vars: secrets.yml
+- include_vars: vault.yml
   no_log: true
 - name: ensure packages are installed
   apt: name={{ item }} state=installed

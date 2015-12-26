@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-for x in `find playbook serverspec -name secrets.*`
+for x in `find playbook serverspec -name vault*.yml`
 do
   if egrep -q '^\$ANSIBLE_VAULT.*AES256' ${x}
   then
