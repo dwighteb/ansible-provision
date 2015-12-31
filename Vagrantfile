@@ -12,9 +12,12 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.define "ubuntu" do |ubuntu|
-    ubuntu.vm.box = "ubuntu/trusty64"
+  config.vm.define "trusty" do |trusty|
+    trusty.vm.box = "ubuntu/trusty64"
   end
+#  config.vm.define "wily" do |wily|
+#    wily.vm.box = "ubuntu/wily64"
+#  end
 
 #  config.vm.define "freebsd" do |freebsd|
 #    freebsd.vm.box = "freebsd/FreeBSD-10.2-STABLE"
@@ -79,7 +82,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.verbose = "v"
     ansible.groups = {
-        "openvpn" => ["ubuntu"]
+        "openvpn" => ["trusty", "wily"]
     }
     ansible.playbook = "playbook/site.yml"
     ansible.vault_password_file = "~/.vault_pass.txt"

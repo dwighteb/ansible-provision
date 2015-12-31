@@ -1,0 +1,6 @@
+---
+aws_access_key: "{{ vault_aws_access_key }}"
+aws_secret_key: "{{ vault_aws_secret_key }}"
+aws_key_name: "{{ vault_aws_key_name }}"
+aws_region: "{{ vault_aws_region }}"
+aws_vpc_subnet_id: "{{ vault_aws_vpc_subnet_id }}"
