@@ -18,6 +18,7 @@
   with_items:
     - filter.d/fail2ban.conf
     - jail.d/fail2ban.conf
+    - jail.local
 - name: configure pam.d sshd
   lineinfile: dest=/etc/pam.d/sshd line='auth required pam_google_authenticator.so'
   notify:
