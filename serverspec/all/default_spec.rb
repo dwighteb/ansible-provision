@@ -92,9 +92,11 @@ describe user('dwighteb') do
   its(:encrypted_password) { should match(/^\$6\$.{8,16}\$.{86}$/) }
 end
 
-describe user('root') do
-  it { should exist }
-  its(:encrypted_password) { should match(/^.{0,2}$/) }
+['root', 'vagrant'].each do |username|
+  describe user(username) do
+    it { should exist }
+    its(:encrypted_password) { should match(/^.{0,2}$/) }
+  end
 end
 
 describe user('ubuntu') do

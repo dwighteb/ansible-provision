@@ -19,19 +19,6 @@
     - filter.d/fail2ban.conf
     - jail.d/fail2ban.conf
     - jail.local
-- name: configure pam.d sshd
-  lineinfile: dest=/etc/pam.d/sshd line='auth required pam_google_authenticator.so'
-  notify:
-    - restart ssh
-- name: configure sshd
-  lineinfile: dest=/etc/ssh/sshd_config regexp={{ item.regexp }} line="{{ item.line }}"
-  notify:
-    - restart ssh
-  with_items:
-    - { regexp: '^ChallengeResponseAuthentication', line: 'ChallengeResponseAuthentication yes' }
-    - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication yes' }
-    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
-    - { regexp: '^UseDNS', line: 'UseDNS no' }
 - name: configure sudo
   copy:
     content: "{{ sudoers_90_admin }}"
@@ -52,8 +39,6 @@
     - public_keys/dbs-iphone-20141231
     - public_keys/dbs-mbp3-20141231
     - public_keys/dwighteb-mbp1-20131224
-- name: remove root password
-  user: name=root password='*'
 - name: add my user ubuntu
   user: name=ubuntu shell=/bin/bash comment="ubuntu user" password="{{ ubuntu_password }}" groups=adm,sudo
 - name: authorized key file for ubuntu
@@ -75,3 +60,21 @@
     owner: ubuntu
     group: ubuntu
     mode: 0400
+- name: configure pam.d sshd
+  lineinfile: dest=/etc/pam.d/sshd line='auth required pam_google_authenticator.so'
+  notify:
+    - restart ssh
+- name: configure sshd
+  lineinfile: dest=/etc/ssh/sshd_config regexp={{ item.regexp }} line="{{ item.line }}"
+  notify:
+    - restart ssh
+  with_items:
+    - { regexp: '^ChallengeResponseAuthentication', line: 'ChallengeResponseAuthentication yes' }
+    - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication yes' }
+    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
+    - { regexp: '^UseDNS', line: 'UseDNS no' }
+- name: remove user password
+  user: name={{ item }} password='*'
+  with_items:
+    - root
+    - vagrant
