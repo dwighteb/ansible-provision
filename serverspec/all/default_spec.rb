@@ -8,6 +8,7 @@ packages = [
   'mutt',
   'ntp',
   'openssh-server',
+  'python-gamin',
   'sysstat']
 
 services = [
@@ -48,7 +49,8 @@ end
 describe file('/etc/fail2ban/jail.local') do
   it { should be_mode 644 }
   it { should be_owned_by 'root' }
-  its(:content) { should match /^backend = polling/ }
+  its(:content) { should_not match /^backend = polling/ }
+  its(:content) { should match /^backend = gamin/ }
 end
 
 describe file('/etc/pam.d/sshd') do

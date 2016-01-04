@@ -10,6 +10,7 @@
     - logcheck
     - mutt
     - ntp
+    - python-gamin
     - sysstat
 - name: configure fail2ban
   copy: src=fail2ban/{{ item }} dest=/etc/fail2ban/{{ item }} owner=root group=root mode=0644
