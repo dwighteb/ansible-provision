@@ -1,27 +1,6 @@
 ---
-  - name: Provision EC2 Instance
-    hosts: local
-    connection: local
-    gather_facts: False
-    tasks:
-    - name: include vault
-      include_vars: vault_ec2.yml
-      no_log: True
-    - name: include vars
-      include_vars: vars_ec2.yml
-      no_log: True
-    - name: Launch instance
-      ec2:
-        access_key: "{{ aws_access_key }}"
-        secret_key: "{{ aws_secret_key }}"
-        key_name: "{{ aws_key_name }}"
-        instance_type: t2.micro
-        instance_tags:
-          name: nat1
-        image: ami-7705521d
-        region: "{{ aws_region }}"
-        wait: yes
-        group: ['SSH_Inbound', 'VPN_Inbound']
-        count: 1
-        vpc_subnet_id: "{{ aws_vpc_subnet_id }}"
-        assign_public_ip: yes
+- hosts: local
+  connection: local
+  gather_facts: False
+  roles:
+    - ec2
