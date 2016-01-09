@@ -1,0 +1,7 @@
+---
+- hosts: openvpn
+  user: "{{ myuser | default('vagrant') }}"
+  sudo: yes
+  roles:
+    - common
+    - openvpn

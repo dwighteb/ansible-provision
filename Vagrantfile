@@ -84,7 +84,7 @@ Vagrant.configure(2) do |config|
     ansible.groups = {
         "openvpn" => ["trusty", "wily"]
     }
-    ansible.playbook = "playbook/site.yml"
+    ansible.playbook = "playbook/vagrant.yml"
     ansible.vault_password_file = "~/.vault_pass.txt"
   end
 end
