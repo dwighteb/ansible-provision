@@ -6,21 +6,25 @@ packages = [
   'smartmontools',
   'squid-deb-proxy-client']
 
-services = [
-  'apt-cacher-ng',
-  'smartmontools']
-
 packages.each do |pkg|
   describe package(pkg) do
     it { should be_installed }
   end
 end
 
-services.each do |svc|
-  describe service(svc) do
-    it { should be_enabled }
-    it { should be_running }
-  end
+describe service('apt-cacher-ng') do
+  it { should be_enabled }
+  it { should be_running }
+end
+
+describe service('smartd'), :if => os[:release] == '15.10' do
+  it { should be_enabled }
+  it { should be_running }
+end
+
+describe service('smartmontools'), :if => os[:release] == '14.04' do
+  it { should be_enabled }
+  it { should be_running }
 end
 
 describe port('3142') do
