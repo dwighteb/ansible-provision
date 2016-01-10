@@ -32,7 +32,7 @@
   notify:
     - restart sysstat
 - name: add my user dwighteb
-  user: name=dwighteb shell=/bin/bash comment="Dwight Barnette" uid=1100 password="{{ dwighteb_password }}" groups=adm,sudo
+  user: name=dwighteb shell=/bin/bash comment="Dwight Barnette" uid=1100 password="{{ dwighteb_password }}" groups=adm,sudo append=yes
 - name: authorized key file for dwighteb
   authorized_key: user=dwighteb key="{{ item }}"
   with_file:
@@ -41,7 +41,7 @@
     - public_keys/dbs-mbp3-20141231
     - public_keys/dwighteb-mbp1-20131224
 - name: add my user ubuntu
-  user: name=ubuntu shell=/bin/bash comment="ubuntu user" password="{{ ubuntu_password }}" groups=adm,sudo
+  user: name=ubuntu shell=/bin/bash comment="ubuntu user" password="{{ ubuntu_password }}" groups=adm,sudo append=yes
 - name: authorized key file for ubuntu
   authorized_key: user=ubuntu key="{{ item }}"
   with_file:

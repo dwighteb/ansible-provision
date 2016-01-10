@@ -1,13 +1,27 @@
 ---
-# Dell tasks
+- name: add apt key for docker
+  apt_key: keyserver=p80.pool.sks-keyservers.net id=58118E89F3A912897C070ADBF76221572C52609D
+- name: add apt repository for docker
+  apt_repository: repo="deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main" state=present
 - name: ensure packages are installed
   apt: name={{ item }} state=installed
   with_items:
     - anacron
     - apt-cacher-ng
+    - docker-engine
+    - linux-image-extra-{{ ansible_kernel }}
     - smartmontools
     - squid-deb-proxy-client
 - name: enable smartmontools
   lineinfile: dest=/etc/default/smartmontools regexp=^start_smartd line='start_smartd=yes'
   notify:
     - restart smartmontools
+- name: add users to docker group
+  user: name={{ item }} groups=docker append=yes
+  with_items:
+    - dwighteb
+    - ubuntu
+- name: configure grub for docker
+  lineinfile: dest=/etc/default/grub regexp='^GRUB_CMDLINE_LINUX=' line='GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"'
+  notify:
+    - run update-grub

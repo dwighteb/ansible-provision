@@ -1,4 +1,5 @@
 ---
-# Dell handlers
 - name: restart smartmontools
   service: name=smartmontools state=restarted
+- name: run update-grub
+  command: /usr/sbin/update-grub
