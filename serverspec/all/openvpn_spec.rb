@@ -54,6 +54,18 @@ end
     its(:content) { should match /^remote-cert-tls client/ }
   end
 end
+describe file('/etc/openvpn/server-443-tcp.conf'), :if => os[:release] == '15.10' do
+  its(:content) { should_not match /^status openvpn-status-443-tcp.log/ }
+end
+describe file('/etc/openvpn/server-443-tcp.conf'), :if => os[:release] == '14.04' do
+  its(:content) { should match /^status openvpn-status-443-tcp.log/ }
+end
+describe file('/etc/openvpn/server-443-udp.conf'), :if => os[:release] == '15.10' do
+  its(:content) { should_not match /^status openvpn-status-443-udp.log/ }
+end
+describe file('/etc/openvpn/server-443-udp.conf'), :if => os[:release] == '14.04' do
+  its(:content) { should match /^status openvpn-status-443-udp.log/ }
+end
 
 describe file('/etc/rc.local') do
   its(:content) { should match /\/usr\/local\/bin\/configure-pat.sh/ }

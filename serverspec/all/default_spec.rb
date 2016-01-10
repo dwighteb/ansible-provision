@@ -8,20 +8,22 @@ packages = [
   'mutt',
   'ntp',
   'openssh-server',
-  'python-gamin',
   'sysstat']
-
-services = [
-  'acpid',
-  'fail2ban',
-  'ntp',
-  'ssh']
 
 packages.each do |pkg|
   describe package(pkg), :if => os[:family] == 'ubuntu' do
     it { should be_installed }
   end
 end
+
+describe package('python-gamin'), :if => os[:release] == '14.04' do
+  it { should be_installed }
+end
+
+services = [
+  'fail2ban',
+  'ntp',
+  'ssh']
 
 services.each do |svc|
   describe service(svc), :if => os[:family] == 'ubuntu' do
@@ -30,26 +32,24 @@ services.each do |svc|
   end
 end
 
+describe service('acpid'), :if => os[:release] == '14.04' do
+  it { should be_enabled }
+  it { should be_running }
+end
+
 describe port(22) do
   it { should be_listening.with('tcp') }
 end
 
-describe file('/etc/fail2ban/filter.d/fail2ban.conf') do
+describe file('/etc/fail2ban/jail.local'), :if => os[:release] == '15.10' do
   it { should be_mode 644 }
   it { should be_owned_by 'root' }
-  its(:content) { should match /^failregex = fail2ban.actions/ }
+  its(:content) { should match /^backend = auto/ }
 end
 
-describe file('/etc/fail2ban/jail.d/fail2ban.conf') do
+describe file('/etc/fail2ban/jail.local'), :if => os[:release] == '14.04' do
   it { should be_mode 644 }
   it { should be_owned_by 'root' }
-  its(:content) { should match /^filter = fail2ban/ }
-end
-
-describe file('/etc/fail2ban/jail.local') do
-  it { should be_mode 644 }
-  it { should be_owned_by 'root' }
-  its(:content) { should_not match /^backend = polling/ }
   its(:content) { should match /^backend = gamin/ }
 end
 

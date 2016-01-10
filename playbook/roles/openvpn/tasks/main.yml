@@ -3,24 +3,32 @@
   no_log: true
 - name: add apt key
   apt_key: url=https://swupdate.openvpn.net/repos/repo-public.gpg state=present
+  when: ansible_distribution_release == "trusty"
 - name: add apt repository
   apt_repository: repo='deb http://swupdate.openvpn.net/apt trusty main' state=present
+  when: ansible_distribution_release == "trusty"
 - name: ensure openvpn is installed
   apt: name=openvpn state=installed
 - name: add system account openvpn
   user: name=openvpn comment="OpenVPN Account" createhome=no home=/nonexistent shell=/usr/sbin/nologin system=yes uid=999
 - name: etc openvpn directory
   file: path=/etc/openvpn state=directory owner=openvpn group=openvpn mode=0755
-- name: openvpn state and log files
+- name: openvpn state files
   shell: sudo -u openvpn touch /etc/openvpn/{{ item }}
   args:
     creates: /etc/openvpn/{{ item }}
   with_items:
     - ipp-443-tcp.txt
     - ipp-443-udp.txt
+- name: openvpn log files
+  shell: sudo -u openvpn touch /etc/openvpn/{{ item }}
+  when: ansible_distribution_release == "trusty"
+  args:
+    creates: /etc/openvpn/{{ item }}
+  with_items:
     - openvpn-status-443-tcp.log
     - openvpn-status-443-udp.log
-- name: openvpn configuration files
+- name: openvpn certs
   copy: src=openvpn/{{ item.name }} dest=/etc/openvpn/{{ item.name }} owner=openvpn group=openvpn mode={{ item.mode }}
   notify:
     - restart openvpn
@@ -28,6 +36,11 @@
     - { name: 'ca.crt', mode: '0644' }
     - { name: 'dh4096.pem', mode: '0644' }
     - { name: 'server.crt', mode: '0644' }
+- name: openvpn configuration files
+  copy: src=openvpn/{{ item.name }}.{{ ansible_distribution_release }} dest=/etc/openvpn/{{ item.name }} owner=openvpn group=openvpn mode={{ item.mode }}
+  notify:
+    - restart openvpn
+  with_items:
     - { name: 'server-443-tcp.conf', mode: '0640' }
     - { name: 'server-443-udp.conf', mode: '0640' }
 - name: openvpn crl for clients secret file

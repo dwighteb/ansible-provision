@@ -10,16 +10,16 @@
     - logcheck
     - mutt
     - ntp
-    - python-gamin
     - sysstat
+- name: ensure trusty packages are installed
+  apt: name={{ item }} state=installed
+  when: ansible_distribution_release == "trusty"
+  with_items:
+    - python-gamin
 - name: configure fail2ban
-  copy: src=fail2ban/{{ item }} dest=/etc/fail2ban/{{ item }} owner=root group=root mode=0644
+  copy: src=fail2ban/jail.local.{{ ansible_distribution_release }} dest=/etc/fail2ban/jail.local owner=root group=root mode=0644
   notify:
     - restart fail2ban
-  with_items:
-    - filter.d/fail2ban.conf
-    - jail.d/fail2ban.conf
-    - jail.local
 - name: configure sudo
   copy:
     content: "{{ sudoers_90_admin }}"

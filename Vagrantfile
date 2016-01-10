@@ -15,10 +15,9 @@ Vagrant.configure(2) do |config|
   config.vm.define "trusty" do |trusty|
     trusty.vm.box = "ubuntu/trusty64"
   end
-#  config.vm.define "wily" do |wily|
-#    wily.vm.box = "ubuntu/wily64"
-#  end
-
+  config.vm.define "wily" do |wily|
+    wily.vm.box = "ubuntu/wily64"
+  end
 #  config.vm.define "freebsd" do |freebsd|
 #    freebsd.vm.box = "freebsd/FreeBSD-10.2-STABLE"
 #    freebsd.ssh.shell = 'sh'
