@@ -1,14 +1,16 @@
 ---
 - hosts: openvpn
-  user: "{{ myuser | default('ubuntu') }}"
-  sudo: yes
+  remote_user: "{{ myuser | default('ubuntu') }}"
+  become: yes
+  become_method: sudo
   roles:
     - common
     - openvpn
 
 - hosts: dell
-  user: "{{ myuser | default('ubuntu') }}"
-  sudo: yes
+  remote_user: "{{ myuser | default('ubuntu') }}"
+  become: yes
+  become_method: sudo
   roles:
     - common
     - dell

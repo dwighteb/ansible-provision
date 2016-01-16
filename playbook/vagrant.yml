@@ -1,7 +1,7 @@
 ---
 - hosts: openvpn
-  user: "{{ myuser | default('vagrant') }}"
-  sudo: yes
+  become: yes
+  become_method: sudo
   roles:
     - common
     - openvpn
