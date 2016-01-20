@@ -42,15 +42,23 @@ describe port(22) do
 end
 
 describe file('/etc/fail2ban/jail.local'), :if => os[:release] == '15.10' do
+  it { should exist }
   it { should be_mode 644 }
   it { should be_owned_by 'root' }
   its(:content) { should match /^backend = auto/ }
 end
 
 describe file('/etc/fail2ban/jail.local'), :if => os[:release] == '14.04' do
+  it { should exist }
   it { should be_mode 644 }
   it { should be_owned_by 'root' }
   its(:content) { should match /^backend = gamin/ }
+end
+
+describe file('/etc/fail2ban/jail.d/recidive.conf') do
+  it { should exist }
+  it { should be_mode 644 }
+  it { should be_owned_by 'root' }
 end
 
 describe file('/etc/pam.d/sshd') do
