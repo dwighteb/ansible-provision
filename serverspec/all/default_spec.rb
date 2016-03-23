@@ -41,6 +41,15 @@ describe port(22) do
   it { should be_listening.with('tcp') }
 end
 
+describe 'Filesystems should have less than 80% of inodes in use' do
+  host_inventory['filesystem'].each do |the_filesystem|
+    the_mount = the_filesystem[1]["mount"]
+    describe command('/bin/df -i ' + the_mount + ' | /usr/bin/tail -n1 | /bin/grep -oP \'\b([0-9]+)%\''), if: the_mount !~ %r!^(/dev$|/run$|/dev/shm$|/run/lock$|/sys/fs/cgroup$|/run/cgmanager/fs$|/run/user/)! do
+      its(:stdout) { is_expected.to match /^([0-9]|[0-7][0-9])%/ }
+    end
+  end
+end
+
 describe file('/etc/fail2ban/jail.local'), :if => os[:release] == '15.10' do
   it { should exist }
   it { should be_mode 644 }
