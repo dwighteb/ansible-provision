@@ -42,9 +42,8 @@ describe port(22) do
 end
 
 describe 'Filesystems should have less than 80% of inodes in use' do
-  host_inventory['filesystem'].each do |the_filesystem|
-    the_mount = the_filesystem[1]["mount"]
-    describe command('/bin/df -i ' + the_mount + ' | /usr/bin/tail -n1 | /bin/grep -oP \'\b([0-9]+)%\''), if: the_mount !~ %r!^(/dev$|/run$|/dev/shm$|/run/lock$|/sys/fs/cgroup$|/run/cgmanager/fs$|/run/user/)! do
+  host_inventory['filesystem'].each do |_, filesystem_attributes|
+    describe command('/bin/df -iP ' + filesystem_attributes['mount'] + ' | /usr/bin/tail -n1 | awk \'{print $5}\''), if: filesystem_attributes['mount'] !~ %r{^(/dev$|/run$|/dev/shm$|/run/lock$|/sys/fs/cgroup$|/run/cgmanager/fs$|/run/user/)} do
       its(:stdout) { is_expected.to match /^([0-9]|[0-7][0-9])%/ }
     end
   end

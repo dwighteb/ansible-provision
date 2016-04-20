@@ -7,6 +7,7 @@ Vagrant.configure(2) do |config|
   end
   config.vm.define "wily" do |wily|
     wily.vm.box = "ubuntu/wily64"
+#    wily.vm.network "forwarded_port", guest: 80, host: 8080
   end
 #  config.vm.define "freebsd" do |freebsd|
 #    freebsd.vm.box = "freebsd/FreeBSD-10.2-STABLE"
