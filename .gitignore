@@ -2,3 +2,6 @@
 *.swp
 .bundle/*
 .DS_Store
+*.log
+*/vagrant.retry
+*/site.retry

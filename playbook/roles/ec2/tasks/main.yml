@@ -8,8 +8,8 @@
     key_name: "{{ aws_key_name }}"
     instance_type: t2.micro
     instance_tags:
-      name: nat1
-    image: ami-8b9087e1
+      Name: nat1
+    image: ami-840910ee
     region: "{{ aws_region }}"
     wait: yes
     group: ['SSH_Inbound', 'VPN_Inbound']

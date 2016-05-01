@@ -20,12 +20,12 @@ end
   end
 end
 
-describe service('smartd'), :if => os[:release] == '15.10' do
+describe service('smartd'), :if => os[:release] >= '15.10' do
   it { should be_enabled }
   it { should be_running }
 end
 
-describe service('smartmontools'), :if => os[:release] == '14.04' do
+describe service('smartmontools'), :if => os[:release] <= '14.04' do
   it { should be_enabled }
   it { should be_running }
 end
