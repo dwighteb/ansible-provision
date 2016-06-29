@@ -79,6 +79,10 @@ describe file('/usr/local/bin/configure-pat.sh') do
   its(:content) { should_not match /iptables -A INPUT -i eth0 -p tcp -m tcp --dport 80 -j ACCEPT/ }
 end
 
+describe file('/lib/systemd/system/openvpn@.service') do
+  its(:content) { should match /After\s?=\s?network.target network-online.target/ }
+end
+
 describe interface('eth0') do
   it { should be_up }
 end

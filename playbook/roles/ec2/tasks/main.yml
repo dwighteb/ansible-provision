@@ -9,7 +9,7 @@
     instance_type: t2.micro
     instance_tags:
       Name: nat1
-    image: ami-f652979b
+    image: ami-ddf13fb0
     region: "{{ aws_region }}"
     wait: yes
     group: ['SSH_Inbound', 'VPN_Inbound']

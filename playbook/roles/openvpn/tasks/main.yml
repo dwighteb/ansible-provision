@@ -59,3 +59,5 @@
   copy: src=rc.local dest=/etc/rc.local owner=root group=root mode=0755
 - name: add file configure-pat.sh
   copy: src=configure-pat.sh dest=/usr/local/bin owner=root group=root mode=0755
+- name: ensure systemd file openvpn@.service has the correct entry
+  ini_file: dest=/lib/systemd/system/openvpn@.service no_extra_spaces=yes section=Unit option=After value='network.target network-online.target'
