@@ -96,6 +96,17 @@ describe file('/home/ubuntu/.google_authenticator') do
   its(:md5sum) { should eq 'c5a8ef51b36c090ec24d48c9756a9399' }
 end
 
+['dwighteb', 'ubuntu'].each do |username|
+  describe file("/home/#{username}/.iterm2_shell_integration.bash") do
+    it { should exist }
+    it { should be_owned_by username }
+  end
+  describe file ("/home/#{username}/.profile") do
+    it { should be_owned_by username }
+    its(:content) { should match /iterm2_shell_integration.bash"$/ }
+  end
+end
+
 ['www.google.com', 'www.yahoo.com'].each do |hostname|
   describe host(hostname) do
     it { should be_reachable.with(:port => 80) }

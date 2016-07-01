@@ -65,6 +65,16 @@
     owner: ubuntu
     group: ubuntu
     mode: 0400
+- name: install iterm2 shell integration
+  shell: curl -L https://iterm2.com/misc/install_shell_integration.sh | bash
+  args:
+    creates: /home/{{ item }}/.iterm2_shell_integration.bash
+    warn: no
+  become: yes
+  become_user: "{{ item }}"
+  with_items:
+    - dwighteb
+    - ubuntu
 - name: configure pam.d sshd
   lineinfile: dest=/etc/pam.d/sshd line='auth required pam_google_authenticator.so'
   notify:
