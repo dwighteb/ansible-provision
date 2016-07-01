@@ -14,20 +14,14 @@
 - name: etc openvpn directory
   file: path=/etc/openvpn state=directory owner=openvpn group=openvpn mode=0755
 - name: openvpn state files
-  shell: sudo -u openvpn touch /etc/openvpn/{{ item }}
+  shell: sudo -u openvpn touch /etc/openvpn/ipp-443-udp.txt
   args:
-    creates: /etc/openvpn/{{ item }}
-  with_items:
-    - ipp-443-tcp.txt
-    - ipp-443-udp.txt
+    creates: /etc/openvpn/ipp-443-udp.txt
 - name: openvpn log files
-  shell: sudo -u openvpn touch /etc/openvpn/{{ item }}
+  shell: sudo -u openvpn touch /etc/openvpn/openvpn-status-443-udp.log
   when: ansible_distribution_release == "trusty"
   args:
-    creates: /etc/openvpn/{{ item }}
-  with_items:
-    - openvpn-status-443-tcp.log
-    - openvpn-status-443-udp.log
+    creates: /etc/openvpn/openvpn-status-443-udp.log
 - name: openvpn certs
   copy: src=openvpn/{{ item.name }} dest=/etc/openvpn/{{ item.name }} owner=openvpn group=openvpn mode={{ item.mode }}
   notify:
@@ -37,12 +31,9 @@
     - { name: 'dh4096.pem', mode: '0644' }
     - { name: 'server.crt', mode: '0644' }
 - name: openvpn configuration files
-  copy: src=openvpn/{{ item.name }}.{{ ansible_distribution_release }} dest=/etc/openvpn/{{ item.name }} owner=openvpn group=openvpn mode={{ item.mode }}
+  copy: src=openvpn/server-443-udp.conf.{{ ansible_distribution_release }} dest=/etc/openvpn/server-443-udp.conf owner=openvpn group=openvpn mode=0640
   notify:
     - restart openvpn
-  with_items:
-    - { name: 'server-443-tcp.conf', mode: '0640' }
-    - { name: 'server-443-udp.conf', mode: '0640' }
 - name: openvpn crl for clients secret file
   copy: content="{{ crl_pem }}" dest=/etc/openvpn/crl.pem owner=openvpn group=openvpn mode=0600
   notify:

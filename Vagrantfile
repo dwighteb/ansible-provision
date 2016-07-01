@@ -5,13 +5,12 @@ Vagrant.configure(2) do |config|
   config.vm.define "trusty" do |trusty|
     trusty.vm.box = "ubuntu/trusty64"
   end
-  config.vm.define "wily" do |wily|
-    wily.vm.box = "ubuntu/wily64"
-#    wily.vm.network "forwarded_port", guest: 80, host: 8080
-  end
   config.vm.define "xenial" do |xenial|
     xenial.vm.box = "ubuntu/xenial64"
 #    xenial.vm.network "forwarded_port", guest: 80, host: 8080
+  end
+  config.vm.define "centos6" do |centos6|
+    centos6.vm.box = "bento/centos-6.7"
   end
 #  config.vm.define "freebsd" do |freebsd|
 #    freebsd.vm.box = "freebsd/FreeBSD-10.2-STABLE"

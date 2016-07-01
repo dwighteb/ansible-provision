@@ -15,7 +15,6 @@ describe process('openvpn'), :if => os[:family] == 'ubuntu' do
 end
 
 describe port(443) do
-  it { should be_listening.with('tcp') }
   it { should be_listening.with('udp') }
 end
 
@@ -41,28 +40,25 @@ end
   end
 end
 
-['/etc/openvpn/server-443-tcp.conf',
- '/etc/openvpn/server-443-udp.conf'].each do |filename|
-  describe file(filename) do
-    it { should exist }
-    it { should be_owned_by 'openvpn' }
-    it { should be_grouped_into 'openvpn' }
-    it { should be_mode 640 }
-    its(:content) { should match /^tls-version-min 1.2/ }
-    its(:content) { should match /^auth SHA256/ }
-    its(:content) { should match /^dh dh4096.pem/ }
-    its(:content) { should match /^remote-cert-tls client/ }
-  end
+describe file('/etc/openvpn/server-443-udp.conf') do
+  it { should exist }
+  it { should be_owned_by 'openvpn' }
+  it { should be_grouped_into 'openvpn' }
+  it { should be_mode 640 }
+  its(:content) { should match /^tls-version-min 1.2/ }
+  its(:content) { should match /^auth SHA256/ }
+  its(:content) { should match /^dh dh4096.pem/ }
+  its(:content) { should match /^remote-cert-tls client/ }
 end
-describe file('/etc/openvpn/server-443-tcp.conf'), :if => os[:release] >= '15.10' do
-  its(:content) { should_not match /^status openvpn-status-443-tcp.log/ }
+
+describe file('/etc/openvpn/server-443-tcp.conf') do
+  it { should_not exist }
 end
-describe file('/etc/openvpn/server-443-tcp.conf'), :if => os[:release] <= '14.04' do
-  its(:content) { should match /^status openvpn-status-443-tcp.log/ }
-end
+
 describe file('/etc/openvpn/server-443-udp.conf'), :if => os[:release] >= '15.10' do
   its(:content) { should_not match /^status openvpn-status-443-udp.log/ }
 end
+
 describe file('/etc/openvpn/server-443-udp.conf'), :if => os[:release] <= '14.04' do
   its(:content) { should match /^status openvpn-status-443-udp.log/ }
 end
@@ -87,10 +83,8 @@ describe interface('eth0') do
   it { should be_up }
 end
 
-['tun0', 'tun1'].each do |tunnel|
-  describe interface(tunnel) do
-    it { should exist }
-  end
+describe interface('tun0') do
+  it { should exist }
 end
 
 describe user('openvpn') do
