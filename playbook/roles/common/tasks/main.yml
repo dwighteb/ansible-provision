@@ -57,12 +57,8 @@
 - name: authorized key file for dwighteb
   authorized_key:
     user: dwighteb
-    key: "{{ item }}"
-  with_file:
-    - public_keys/dbs-ipad-20141231
-    - public_keys/dbs-iphone-20141231
-    - public_keys/dbs-mbp3-20141231
-    - public_keys/dwighteb-mbp1-20131224
+    key: https://github.com/dwighteb.keys
+    exclusive: yes
 - name: add my user ubuntu
   user:
     name: ubuntu
@@ -74,10 +70,7 @@
 - name: authorized key file for ubuntu
   authorized_key:
     user: ubuntu
-    key: "{{ item }}"
-  with_file:
-    - public_keys/dbs-mbp3-20141231
-    - public_keys/VPC-key-20131224
+    key: https://github.com/dwighteb.keys
 - name: dwighteb google authenticator file
   copy:
     content: "{{ dwighteb_google_authenticator }}"
