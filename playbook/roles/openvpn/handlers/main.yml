@@ -1,4 +1,5 @@
 ---
-# Openvpn handlers
 - name: restart openvpn
-  service: name=openvpn state=restarted
+  service:
+    name: openvpn
+    state: restarted

@@ -1,8 +1,13 @@
 ---
-# Common handlers
 - name: restart fail2ban
-  service: name=fail2ban state=restarted
+  service:
+    name: fail2ban
+    state: restarted
 - name: restart ssh
-  service: name=ssh state=restarted
+  service:
+    name: ssh
+    state: restarted
 - name: restart sysstat
-  service: name=sysstat state=restarted
+  service:
+    name: sysstat
+    state: restarted

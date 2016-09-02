@@ -28,17 +28,17 @@
     warn: false
 - name: openvpn certs
   copy:
-    src: openvpn/{{ item.name }}
-    dest: /etc/openvpn/{{ item.name }}
+    src: openvpn/{{ item }}
+    dest: /etc/openvpn/{{ item }}
     owner: openvpn
     group: openvpn
-    mode: "{{ item.mode }}"
+    mode: 0644
   notify:
     - restart openvpn
   with_items:
-    - { name: 'ca.crt',     mode: '0644' }
-    - { name: 'dh4096.pem', mode: '0644' }
-    - { name: 'server.crt', mode: '0644' }
+    - ca.crt
+    - dh4096.pem
+    - server.crt
 - name: openvpn configuration files
   copy:
     src: openvpn/server-443-udp.conf
@@ -48,33 +48,19 @@
     mode: 0640
   notify:
     - restart openvpn
-- name: openvpn crl for clients secret file
+- name: openvpn private keys
   copy:
-    content: "{{ crl_pem }}"
-    dest: /etc/openvpn/crl.pem
+    content: "{{ item.content }}"
+    dest: /etc/openvpn/{{ item.name }}
     owner: openvpn
     group: openvpn
     mode: 0600
   notify:
     - restart openvpn
-- name: openvpn server private key secret file
-  copy:
-    content: "{{ server_key }}"
-    dest: /etc/openvpn/server.key
-    owner: openvpn
-    group: openvpn
-    mode: 0600
-  notify:
-    - restart openvpn
-- name: openvpn ta key secret file
-  copy:
-    content: "{{ ta_key }}"
-    dest: /etc/openvpn/ta.key
-    owner: openvpn
-    group: openvpn
-    mode: 0600
-  notify:
-    - restart openvpn
+  with_items:
+    - { name: crl.pem,    content: "{{ crl_pem }}" }
+    - { name: server.key, content: "{{ server_key }}" }
+    - { name: ta.key,     content: "{{ ta_key }}" }
 - name: rc.local to execute configure-pat.sh
   copy:
     src: rc.local
