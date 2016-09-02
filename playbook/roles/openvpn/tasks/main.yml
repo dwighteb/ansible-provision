@@ -61,6 +61,7 @@
     - { name: crl.pem,    content: "{{ crl_pem }}" }
     - { name: server.key, content: "{{ server_key }}" }
     - { name: ta.key,     content: "{{ ta_key }}" }
+  no_log: true
 - name: rc.local to execute configure-pat.sh
   copy:
     src: rc.local
