@@ -2,7 +2,9 @@
 - include_vars: vault.yml
   no_log: true
 - name: ensure packages are installed
-  apt: name={{ item }} state=installed
+  apt:
+    name: "{{ item }}"
+    state: installed
   with_items:
     - acpid
     - fail2ban
@@ -12,16 +14,28 @@
     - ntp
     - sysstat
 - name: ensure trusty packages are installed
-  apt: name={{ item }} state=installed
+  apt:
+    name: "{{ item }}"
+    state: installed
   when: ansible_distribution_release == "trusty"
   with_items:
     - python-gamin
 - name: configure fail2ban
-  copy: src=fail2ban/jail.local.{{ ansible_distribution_release }} dest=/etc/fail2ban/jail.local owner=root group=root mode=0644
+  copy:
+    src: fail2ban/jail.local.{{ ansible_distribution_release }}
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: 0644
   notify:
     - restart fail2ban
 - name: enable fail2ban long term jail
-  copy: src=fail2ban/jail.d/recidive.conf dest=/etc/fail2ban/jail.d/recidive.conf owner=root group=root mode=0644
+  copy:
+    src: fail2ban/jail.d/recidive.conf
+    dest: /etc/fail2ban/jail.d/recidive.conf
+    owner: root
+    group: root
+    mode: 0644
   notify:
     - restart fail2ban
 - name: configure sudo
@@ -32,22 +46,42 @@
     group: root
     mode: 0440
 - name: enable sysstat
-  lineinfile: dest=/etc/default/sysstat regexp=^ENABLED line='ENABLED=true'
+  lineinfile:
+    dest: /etc/default/sysstat
+    regexp: ^ENABLED
+    line: ENABLED=true
   notify:
     - restart sysstat
 - name: add my user dwighteb
-  user: name=dwighteb shell=/bin/bash comment="Dwight Barnette" uid=1100 password="{{ dwighteb_password }}" groups=adm,sudo append=yes
+  user:
+    name: dwighteb
+    shell: /bin/bash
+    comment: Dwight Barnette
+    uid: 1100
+    password: "{{ dwighteb_password }}"
+    groups: adm,sudo
+    append: yes
 - name: authorized key file for dwighteb
-  authorized_key: user=dwighteb key="{{ item }}"
+  authorized_key:
+    user: dwighteb
+    key: "{{ item }}"
   with_file:
     - public_keys/dbs-ipad-20141231
     - public_keys/dbs-iphone-20141231
     - public_keys/dbs-mbp3-20141231
     - public_keys/dwighteb-mbp1-20131224
 - name: add my user ubuntu
-  user: name=ubuntu shell=/bin/bash comment="ubuntu user" password="{{ ubuntu_password }}" groups=adm,sudo append=yes
+  user:
+    name: ubuntu
+    shell: /bin/bash
+    comment: ubuntu user
+    password: "{{ ubuntu_password }}"
+    groups: adm,sudo
+    append: yes
 - name: authorized key file for ubuntu
-  authorized_key: user=ubuntu key="{{ item }}"
+  authorized_key:
+    user: ubuntu
+    key: "{{ item }}"
   with_file:
     - public_keys/dbs-mbp3-20141231
     - public_keys/VPC-key-20131224
@@ -76,11 +110,16 @@
     - dwighteb
     - ubuntu
 - name: configure pam.d sshd
-  lineinfile: dest=/etc/pam.d/sshd line='auth required pam_google_authenticator.so'
+  lineinfile:
+    dest: /etc/pam.d/sshd
+    line: 'auth required pam_google_authenticator.so'
   notify:
     - restart ssh
 - name: configure sshd
-  lineinfile: dest=/etc/ssh/sshd_config regexp={{ item.regexp }} line="{{ item.line }}"
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
   notify:
     - restart ssh
   with_items:
@@ -89,7 +128,9 @@
     - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
     - { regexp: '^UseDNS', line: 'UseDNS no' }
 - name: remove user password
-  user: name={{ item }} password='*'
+  user:
+    name: "{{ item }}"
+    password: '*'
   with_items:
     - root
     - vagrant
