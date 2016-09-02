@@ -16,10 +16,6 @@ packages.each do |pkg|
   end
 end
 
-describe package('python-gamin'), :if => os[:release] <= '14.04' do
-  it { should be_installed }
-end
-
 services = [
   'fail2ban',
   'ntp',
@@ -30,11 +26,6 @@ services.each do |svc|
     it { should be_enabled }
     it { should be_running }
   end
-end
-
-describe service('acpid'), :if => os[:release] <= '14.04' do
-  it { should be_enabled }
-  it { should be_running }
 end
 
 describe port(22) do
@@ -49,18 +40,11 @@ describe 'Filesystems should have less than 80% of inodes in use' do
   end
 end
 
-describe file('/etc/fail2ban/jail.local'), :if => os[:release] >= '15.10' do
+describe file('/etc/fail2ban/jail.local') do
   it { should exist }
   it { should be_mode 644 }
   it { should be_owned_by 'root' }
   its(:content) { should match /^backend = auto/ }
-end
-
-describe file('/etc/fail2ban/jail.local'), :if => os[:release] <= '14.04' do
-  it { should exist }
-  it { should be_mode 644 }
-  it { should be_owned_by 'root' }
-  its(:content) { should match /^backend = gamin/ }
 end
 
 describe file('/etc/fail2ban/jail.d/recidive.conf') do

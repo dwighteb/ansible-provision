@@ -13,16 +13,9 @@
     - mutt
     - ntp
     - sysstat
-- name: ensure trusty packages are installed
-  apt:
-    name: "{{ item }}"
-    state: installed
-  when: ansible_distribution_release == "trusty"
-  with_items:
-    - python-gamin
 - name: configure fail2ban
   copy:
-    src: fail2ban/jail.local.{{ ansible_distribution_release }}
+    src: fail2ban/jail.local
     dest: /etc/fail2ban/jail.local
     owner: root
     group: root
@@ -124,9 +117,9 @@
     - restart ssh
   with_items:
     - { regexp: '^ChallengeResponseAuthentication', line: 'ChallengeResponseAuthentication yes' }
-    - { regexp: '^PasswordAuthentication', line: 'PasswordAuthentication yes' }
-    - { regexp: '^PermitRootLogin', line: 'PermitRootLogin no' }
-    - { regexp: '^UseDNS', line: 'UseDNS no' }
+    - { regexp: '^PasswordAuthentication',          line: 'PasswordAuthentication yes' }
+    - { regexp: '^PermitRootLogin',                 line: 'PermitRootLogin no' }
+    - { regexp: '^UseDNS',                          line: 'UseDNS no' }
 - name: remove user password
   user:
     name: "{{ item }}"

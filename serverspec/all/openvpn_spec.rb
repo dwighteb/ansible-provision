@@ -55,12 +55,8 @@ describe file('/etc/openvpn/server-443-tcp.conf') do
   it { should_not exist }
 end
 
-describe file('/etc/openvpn/server-443-udp.conf'), :if => os[:release] >= '15.10' do
+describe file('/etc/openvpn/server-443-udp.conf') do
   its(:content) { should_not match /^status openvpn-status-443-udp.log/ }
-end
-
-describe file('/etc/openvpn/server-443-udp.conf'), :if => os[:release] <= '14.04' do
-  its(:content) { should match /^status openvpn-status-443-udp.log/ }
 end
 
 describe file('/etc/rc.local') do

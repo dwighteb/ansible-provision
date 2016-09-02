@@ -2,9 +2,6 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
-  config.vm.define "trusty" do |trusty|
-    trusty.vm.box = "ubuntu/trusty64"
-  end
   config.vm.define "xenial" do |xenial|
     xenial.vm.box = "ubuntu/xenial64"
 #    xenial.vm.network "forwarded_port", guest: 80, host: 8080
@@ -21,7 +18,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "ansible" do |ansible|
     ansible.verbose = "v"
     ansible.groups = {
-        "openvpn" => ["trusty", "wily", "xenial"]
+        "openvpn" => ["xenial"]
     }
     ansible.playbook = "playbook/vagrant.yml"
     ansible.vault_password_file = "~/.vault_pass.txt"
