@@ -3,7 +3,9 @@ require 'spec_helper'
 packages = [
   'anacron',
   'apt-cacher-ng',
+  'apt-transport-https',
   'docker-engine',
+  'linux-image-extra-virtual',
   'smartmontools',
   'squid-deb-proxy-client']
 
@@ -13,16 +15,11 @@ packages.each do |pkg|
   end
 end
 
-['apt-cacher-ng','docker'].each do |services|
+['apt-cacher-ng','docker','smartd'].each do |services|
   describe service(services) do
     it { should be_enabled }
     it { should be_running }
   end
-end
-
-describe service('smartd') do
-  it { should be_enabled }
-  it { should be_running }
 end
 
 describe file('/etc/default/grub') do

@@ -22,7 +22,7 @@ end
 
 desc 'Run ansible against dell1'
 task :build_dell1 do
-  sh 'ansible-playbook playbook/site.yml --limit dell1.local -v --vault-password-file ~/.vault_pass.txt'
+  sh 'ansible-playbook playbook/site.yml -i my_hosts --limit dell1.local -v --vault-password-file ~/.vault_pass.txt'
 end
 
 desc 'Run ansible against dell2'

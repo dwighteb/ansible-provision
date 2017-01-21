@@ -1,4 +1,8 @@
 ---
+- name: ensure the apt https transport is installed
+  apt:
+    name: apt-transport-https
+    state: installed
 - name: add apt key for docker
   apt_key:
     keyserver: p80.pool.sks-keyservers.net
@@ -11,11 +15,13 @@
   apt:
     name: "{{ item }}"
     state: installed
+    update_cache: yes
   with_items:
     - anacron
     - apt-cacher-ng
     - docker-engine
     - linux-image-extra-{{ ansible_kernel }}
+    - linux-image-extra-virtual
     - smartmontools
     - squid-deb-proxy-client
 - name: enable smartmontools

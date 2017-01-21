@@ -8,7 +8,6 @@
   with_items:
     - acpid
     - fail2ban
-    - libpam-google-authenticator
     - logcheck
     - mutt
     - ntp
@@ -71,36 +70,6 @@
   authorized_key:
     user: ubuntu
     key: https://github.com/dwighteb.keys
-- name: dwighteb google authenticator file
-  copy:
-    content: "{{ dwighteb_google_authenticator }}"
-    dest: /home/dwighteb/.google_authenticator
-    owner: dwighteb
-    group: dwighteb
-    mode: 0400
-- name: ubuntu google authenticator file
-  copy:
-    content: "{{ ubuntu_google_authenticator }}"
-    dest: /home/ubuntu/.google_authenticator
-    owner: ubuntu
-    group: ubuntu
-    mode: 0400
-- name: install iterm2 shell integration
-  shell: curl -L https://iterm2.com/misc/install_shell_integration.sh | bash
-  args:
-    creates: /home/{{ item }}/.iterm2_shell_integration.bash
-    warn: no
-  become: yes
-  become_user: "{{ item }}"
-  with_items:
-    - dwighteb
-    - ubuntu
-- name: configure pam.d sshd
-  lineinfile:
-    dest: /etc/pam.d/sshd
-    line: 'auth required pam_google_authenticator.so'
-  notify:
-    - restart ssh
 - name: configure sshd
   lineinfile:
     dest: /etc/ssh/sshd_config
@@ -109,8 +78,6 @@
   notify:
     - restart ssh
   with_items:
-    - { regexp: '^ChallengeResponseAuthentication', line: 'ChallengeResponseAuthentication yes' }
-    - { regexp: '^PasswordAuthentication',          line: 'PasswordAuthentication yes' }
     - { regexp: '^PermitRootLogin',                 line: 'PermitRootLogin no' }
     - { regexp: '^UseDNS',                          line: 'UseDNS no' }
 - name: remove user password

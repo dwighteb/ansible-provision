@@ -3,7 +3,6 @@ require 'spec_helper'
 packages = [
   'acpid',
   'fail2ban',
-  'libpam-google-authenticator',
   'logcheck',
   'mutt',
   'ntp',
@@ -53,42 +52,13 @@ describe file('/etc/fail2ban/jail.d/recidive.conf') do
   it { should be_owned_by 'root' }
 end
 
-describe file('/etc/pam.d/sshd') do
-  its(:content) { should match /^auth required pam_google_authenticator.so/ }
-end
-
 describe file('/etc/ssh/sshd_config') do
-  its(:content) { should match /^ChallengeResponseAuthentication yes/ }
-  its(:content) { should match /^PasswordAuthentication yes/ }
   its(:content) { should match /^PermitRootLogin no/ }
   its(:content) { should match /^UseDNS no/ }
 end
 
 describe file('/etc/default/sysstat') do
   its(:content) { should match /^ENABLED=true/ }
-end
-
-describe file('/home/dwighteb/.google_authenticator') do
-  it { should exist }
-  it { should be_mode 400 }
-  its(:md5sum) { should eq '39e3f98dc27a1bc6b18c9beb52acfe07' }
-end
-
-describe file('/home/ubuntu/.google_authenticator') do
-  it { should exist }
-  it { should be_mode 400 }
-  its(:md5sum) { should eq 'c5a8ef51b36c090ec24d48c9756a9399' }
-end
-
-['dwighteb', 'ubuntu'].each do |username|
-  describe file("/home/#{username}/.iterm2_shell_integration.bash") do
-    it { should exist }
-    it { should be_owned_by username }
-  end
-  describe file ("/home/#{username}/.profile") do
-    it { should be_owned_by username }
-    its(:content) { should match /iterm2_shell_integration.bash"$/ }
-  end
 end
 
 ['www.google.com', 'www.yahoo.com'].each do |hostname|
