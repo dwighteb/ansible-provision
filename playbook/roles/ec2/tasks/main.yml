@@ -6,10 +6,10 @@
     access_key: "{{ aws_access_key }}"
     secret_key: "{{ aws_secret_key }}"
     key_name: "{{ aws_key_name }}"
-    instance_type: t2.micro
+    instance_type: t2.nano
     instance_tags:
-      Name: nat1
-    image: ami-ddf13fb0
+      Name: AwsDocker
+    image: ami-f0768de6
     region: "{{ aws_region }}"
     wait: yes
     group: ['SSH_Inbound', 'VPN_Inbound']

@@ -1,13 +1,13 @@
-task :default => :build_nat
+task :default => :build_awsdocker
 
-desc 'Run ansible against nat instance'
-task :build_nat do
-  sh 'ansible-playbook playbook/site.yml -l openvpn -v --vault-password-file ~/.vault_pass.txt'
+desc 'Run ansible against awsdocker instance'
+task :build_awsdocker do
+  sh 'ansible-playbook playbook/site.yml -l awsdocker -v --vault-password-file ~/.vault_pass.txt -i ~/ansible.hosts'
 end
 
 desc 'Provision ec2 instance'
 task :build_ec2 do
-  sh 'ansible-playbook playbook/ec2.yml -v --vault-password-file ~/.vault_pass.txt'
+  sh 'ansible-playbook playbook/ec2.yml -v --vault-password-file ~/.vault_pass.txt -i ~/ansible.hosts'
 end
 
 desc 'Run ansible against all systems'

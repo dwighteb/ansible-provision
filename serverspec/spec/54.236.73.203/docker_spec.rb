@@ -1,0 +1,1 @@
+../../all/docker_spec.rb

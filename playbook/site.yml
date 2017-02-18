@@ -1,5 +1,5 @@
 ---
-- hosts: openvpn
+- hosts: awsdocker
   remote_user: "{{ myuser | default('ubuntu') }}"
   become: yes
   become_method: sudo
@@ -11,7 +11,8 @@
       setup:
   roles:
     - common
-    - openvpn
+    - docker
+    - ipseccontainer
 
 - hosts: dell
   remote_user: "{{ myuser | default('ubuntu') }}"

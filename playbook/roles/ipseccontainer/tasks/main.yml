@@ -1,0 +1,42 @@
+---
+- include_vars: vault.yml
+  no_log: true
+- name: install python-pip
+  apt:
+    name: python-pip
+    state: installed
+- name: install docker-py pip package
+  pip:
+    name: docker-py
+- name: pull the ipsec image
+  docker_image:
+    name: dwighteb/ipsec-vpn-server
+- name: vpn environment file for container
+  copy:
+    content: "{{ vpn_env }}"
+    dest: /home/ubuntu/vpn.env
+    owner: root
+    group: root
+    mode: 0400
+  no_log: true
+- name: add af_key kernel module to startup configuration
+  copy:
+    src: af_key.conf
+    dest: /etc/modules-load.d/af_key.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+  - run modprobe af_key
+- name: run the ipsec container
+  docker_container:
+    name: ipsec-vpn-server
+    image: dwighteb/ipsec-vpn-server
+    ports:
+    - "500:500/udp"
+    - "4500:4500/udp"
+    env_file: /home/ubuntu/vpn.env
+    restart_policy: always
+    volumes: /lib/modules:/lib/modules:ro
+    detach: true
+    privileged: true

@@ -1,0 +1,2 @@
+---
+vpn_env: "{{ vault_vpn_env }}"
