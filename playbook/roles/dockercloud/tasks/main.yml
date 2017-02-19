@@ -8,11 +8,11 @@
     mode: 0644
   notify:
   - run modprobe af_key
-- name: add users to docker group
-  user:
-    name: "{{ item }}"
-    groups: docker
-    append: yes
-  with_items:
-    - dwighteb
-    - ubuntu
+
+- name: configure grub for docker
+  lineinfile:
+    dest: /etc/default/grub
+    regexp: ^GRUB_CMDLINE_LINUX=
+    line: 'GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"'
+  notify:
+    - run update-grub

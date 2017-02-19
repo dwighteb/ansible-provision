@@ -8,8 +8,6 @@
   with_items:
     - acpid
     - fail2ban
-    - logcheck
-    - mutt
     - ntp
     - sysstat
 - name: configure fail2ban
@@ -44,20 +42,6 @@
     line: ENABLED=true
   notify:
     - restart sysstat
-- name: add my user dwighteb
-  user:
-    name: dwighteb
-    shell: /bin/bash
-    comment: Dwight Barnette
-    uid: 1100
-    password: "{{ dwighteb_password }}"
-    groups: adm,sudo
-    append: yes
-- name: authorized key file for dwighteb
-  authorized_key:
-    user: dwighteb
-    key: https://github.com/dwighteb.keys
-    exclusive: yes
 - name: add my user ubuntu
   user:
     name: ubuntu
@@ -80,10 +64,3 @@
   with_items:
     - { regexp: '^PermitRootLogin',                 line: 'PermitRootLogin no' }
     - { regexp: '^UseDNS',                          line: 'UseDNS no' }
-- name: remove user password
-  user:
-    name: "{{ item }}"
-    password: '*'
-  with_items:
-    - root
-    - vagrant

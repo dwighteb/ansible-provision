@@ -3,8 +3,6 @@ require 'spec_helper'
 packages = [
   'acpid',
   'fail2ban',
-  'logcheck',
-  'mutt',
   'ntp',
   'openssh-server',
   'sysstat']
@@ -59,28 +57,6 @@ end
 
 describe file('/etc/default/sysstat') do
   its(:content) { should match /^ENABLED=true/ }
-end
-
-['www.google.com', 'www.yahoo.com'].each do |hostname|
-  describe host(hostname) do
-    it { should be_reachable.with(:port => 80) }
-  end
-end
-
-describe user('dwighteb') do
-  it { should exist }
-  it { should have_uid 1100 }
-  it { should have_login_shell '/bin/bash' }
-  it { should have_home_directory '/home/dwighteb' }
-  it { should have_authorized_key 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDEcL268vOj9Q5/2jRch6fulX/x7QsJ17zk3RA/yVyi/zxKdoIhvj6s4ioCiq4ojmEM2lRoC412adJDnab2uOVPmXoTi/vky3eMkV2EzFfWaJJgL+sC6cLFS6iYTLbwiHlo5RK9UWt19+E8qc3DUpKVCBPpjKYFe6AqyVYmsVh9AKZzRFwwHS6JABa90W3CQDUQSFdmq0yvgcuSZ0h5k7SJ24Dj1mM6K5deizvOkCfNsPDSSGN3qEKXLUPAckSdongmhGflW5asQunQ6or7gNx4ukSgUdPGD1AVH3djGNlCYJjYBAzchXN+0NgXEuZtxRe+sG3AGGtRYprId2a3OCM0RDeQr08vPmNzUpu+EWYE+2LHGLCK5GJMLb1hVo0JpjEGUmu7t4849x6Pj16YZXKfmbjQUchtPCIuIUIVEnyoWh2P6NC4j3mjNJEyCDuaNg4HfGAOaMXn+xgbyhRbVNRoPGJwFSxIDPagDAFGKm8PfLi4kAJKuDmDWKfMwUiWPqfiaR+gwrV1oM+BU6a5bvrdPysli8lP7aak4LE9dZE/v3zmZhPjvAlgDelXmNsoCqoRFo3FJt8RPhtLPaN2heofZoo9+0Ep9IBipVluJHr6T8IcTDAgLTMdmiaC8rPAaRyBC1DcZQfmtg/mcReRbX1AcuGSLhAeR2QQhdv2UJEpOQ== dwighteb@20160709.mbp3' }
-  its(:encrypted_password) { should match(/^\$6\$.{8,16}\$.{86}$/) }
-end
-
-['root', 'vagrant'].each do |username|
-  describe user(username) do
-    it { should exist }
-    its(:encrypted_password) { should match(/^.{0,2}$/) }
-  end
 end
 
 describe user('ubuntu') do

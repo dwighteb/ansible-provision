@@ -1,7 +1,4 @@
-.vagrant/*
 *.swp
-.bundle/*
 .DS_Store
 *console.log
-*/vagrant.retry
 */site.retry

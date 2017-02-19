@@ -1,0 +1,1 @@
+../../serverspec/dell_spec.rb
