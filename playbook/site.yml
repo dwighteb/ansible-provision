@@ -1,5 +1,5 @@
 ---
-- hosts: awsdocker
+- hosts: dockercloud
   remote_user: "{{ myuser | default('ubuntu') }}"
   become: yes
   become_method: sudo
@@ -11,8 +11,7 @@
       setup:
   roles:
     - common
-    - docker
-    - ipseccontainer
+    - dockercloud
 
 - hosts: dell
   remote_user: "{{ myuser | default('ubuntu') }}"

@@ -1,0 +1,18 @@
+---
+- name: add af_key kernel module to startup configuration
+  copy:
+    src: af_key.conf
+    dest: /etc/modules-load.d/af_key.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+  - run modprobe af_key
+- name: add users to docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: yes
+  with_items:
+    - dwighteb
+    - ubuntu

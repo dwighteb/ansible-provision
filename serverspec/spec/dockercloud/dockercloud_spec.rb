@@ -1,0 +1,1 @@
+../../all/dockercloud_spec.rb

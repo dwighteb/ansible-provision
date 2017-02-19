@@ -1,8 +1,8 @@
 task :default => :build_awsdocker
 
-desc 'Run ansible against awsdocker instance'
-task :build_awsdocker do
-  sh 'ansible-playbook playbook/site.yml -l awsdocker -v --vault-password-file ~/.vault_pass.txt -i ~/ansible.hosts'
+desc 'Run ansible against dockercloud instance'
+task :build_dockercloud do
+  sh 'ansible-playbook playbook/site.yml -l dockercloud -v --vault-password-file ~/.vault_pass.txt -i ~/ansible.hosts'
 end
 
 desc 'Provision ec2 instance'
