@@ -16,3 +16,15 @@
     line: 'GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"'
   notify:
     - run update-grub
+
+- name: check if docker command is installed
+  stat:
+    path: /usr/bin/docker
+  register: docker_command
+
+- name: add users to docker group
+  user:
+    name: ubuntu
+    groups: docker
+    append: yes
+  when: docker_command.stat.exists == True
