@@ -12,7 +12,7 @@
     image: ami-f0768de6
     region: "{{ aws_region }}"
     wait: yes
-    group: ['SSH_Inbound', 'VPN_Inbound']
+    group: ['SSH-Inbound', 'VPN-Inbound']
     count: 1
     vpc_subnet_id: "{{ aws_vpc_subnet_id }}"
     assign_public_ip: yes
