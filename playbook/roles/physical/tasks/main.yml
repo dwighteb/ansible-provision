@@ -3,12 +3,11 @@
   apt:
     name: "{{ item }}"
     state: installed
-    update_cache: yes
   with_items:
     - anacron
-    - apt-cacher-ng
+    - avahi-daemon
     - smartmontools
-    - squid-deb-proxy-client
+
 - name: enable smartmontools
   lineinfile:
     dest: /etc/default/smartmontools

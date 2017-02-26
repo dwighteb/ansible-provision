@@ -12,6 +12,7 @@
   roles:
     - common
     - dockercloud
+    - physical
 
 - hosts: dell
   remote_user: "{{ myuser | default('ubuntu') }}"
@@ -19,4 +20,4 @@
   become_method: sudo
   roles:
     - common
-    - dell
+    - physical
