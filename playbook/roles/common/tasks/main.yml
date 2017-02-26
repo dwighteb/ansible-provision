@@ -1,6 +1,7 @@
 ---
 - include_vars: vault.yml
   no_log: true
+
 - name: ensure packages are installed
   apt:
     name: "{{ item }}"
@@ -8,8 +9,10 @@
   with_items:
     - acpid
     - fail2ban
+    - libpam-google-authenticator
     - ntp
     - sysstat
+
 - name: configure fail2ban
   copy:
     src: fail2ban/jail.local
@@ -19,6 +22,7 @@
     mode: 0644
   notify:
     - restart fail2ban
+
 - name: enable fail2ban long term jail
   copy:
     src: fail2ban/jail.d/recidive.conf
@@ -28,6 +32,7 @@
     mode: 0644
   notify:
     - restart fail2ban
+
 - name: configure sudo
   copy:
     content: "{{ sudoers_90_admin }}"
@@ -35,6 +40,7 @@
     owner: root
     group: root
     mode: 0440
+
 - name: enable sysstat
   lineinfile:
     dest: /etc/default/sysstat
@@ -42,6 +48,7 @@
     line: ENABLED=true
   notify:
     - restart sysstat
+
 - name: add my user ubuntu
   user:
     name: ubuntu
@@ -50,10 +57,27 @@
     password: "{{ ubuntu_password }}"
     groups: adm,sudo
     append: yes
+
 - name: authorized key file for ubuntu
   authorized_key:
     user: ubuntu
     key: https://github.com/dwighteb.keys
+
+- name: ubuntu google authenticator file
+  copy:
+    content: "{{ ubuntu_google_authenticator }}"
+    dest: /home/ubuntu/.google_authenticator
+    owner: ubuntu
+    group: ubuntu
+    mode: 0400
+
+- name: configure pam.d sshd for google authenticator
+  lineinfile:
+    dest: /etc/pam.d/sshd
+    line: 'auth required pam_google_authenticator.so'
+  notify:
+    - restart ssh
+
 - name: configure sshd
   lineinfile:
     dest: /etc/ssh/sshd_config
@@ -62,5 +86,7 @@
   notify:
     - restart ssh
   with_items:
+    - { regexp: '^ChallengeResponseAuthentication', line: 'ChallengeResponseAuthentication yes' }
+    - { regexp: '^PasswordAuthentication',          line: 'PasswordAuthentication yes' }
     - { regexp: '^PermitRootLogin',                 line: 'PermitRootLogin no' }
     - { regexp: '^UseDNS',                          line: 'UseDNS no' }

@@ -1,3 +1,4 @@
 ---
 sudoers_90_admin: "{{ vault_sudoers_90_admin }}"
 ubuntu_password: "{{ vault_ubuntu_password }}"
+ubuntu_google_authenticator: "{{ vault_ubuntu_google_authenticator }}"

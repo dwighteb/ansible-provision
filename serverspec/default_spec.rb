@@ -37,17 +37,40 @@ describe 'Filesystems should have less than 80% of inodes in use' do
   end
 end
 
-describe file('/etc/fail2ban/jail.local') do
-  it { should exist }
-  it { should be_mode 644 }
-  it { should be_owned_by 'root' }
-  its(:content) { should match /^backend = auto/ }
+describe "fail2ban configured correctly" do
+  describe file('/etc/fail2ban/jail.local') do
+    it { should exist }
+    it { should be_mode 644 }
+    it { should be_owned_by 'root' }
+    its(:content) { should match /^backend = auto/ }
+  end
+
+  describe file('/etc/fail2ban/jail.d/recidive.conf') do
+    it { should exist }
+    it { should be_mode 644 }
+    it { should be_owned_by 'root' }
+  end
 end
 
-describe file('/etc/fail2ban/jail.d/recidive.conf') do
-  it { should exist }
-  it { should be_mode 644 }
-  it { should be_owned_by 'root' }
+describe "Google Authenticator configured correctly" do
+  describe package('libpam-google-authenticator') do
+    it { should be_installed }
+  end
+
+  describe file('/etc/pam.d/sshd') do
+    its(:content) { should match /^auth required pam_google_authenticator.so/ }
+  end
+
+  describe file('/etc/ssh/sshd_config') do
+    its(:content) { should match /^ChallengeResponseAuthentication yes/ }
+    its(:content) { should match /^PasswordAuthentication yes/ }
+  end
+
+  describe file('/home/ubuntu/.google_authenticator') do
+    it { should exist }
+    it { should be_mode 400 }
+    its(:md5sum) { should eq '4d847e27e6af638c3154b76d3698f325' }
+  end
 end
 
 describe file('/etc/ssh/sshd_config') do

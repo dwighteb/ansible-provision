@@ -1,5 +1,5 @@
 ---
-- hosts: dockercloud
+- hosts: mac-mini
   remote_user: "{{ myuser | default('ubuntu') }}"
   become: yes
   become_method: sudo

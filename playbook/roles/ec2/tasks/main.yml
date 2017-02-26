@@ -9,7 +9,7 @@
     instance_type: t2.nano
     instance_tags:
       Name: DockerCloud
-    image: ami-f0768de6
+    image: ami-1ac0120c
     region: "{{ aws_region }}"
     wait: yes
     group: ['SSH-Inbound', 'VPN-Inbound']
