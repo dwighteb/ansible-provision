@@ -5,9 +5,9 @@ task :spec    => 'spec:all'
 task :default => :spec
 
 namespace 'ansible' do
-  desc 'Run ansible against mac-mini system'
-  task 'mac-mini' do
-    sh 'ansible-playbook playbook/site.yml -l mac-mini -v --vault-password-file ~/.vault_pass.txt -i ~/ansible.hosts'
+  desc 'Run ansible against mac systems'
+  task 'mac' do
+    sh 'ansible-playbook playbook/site.yml -l mac -v --vault-password-file ~/.vault_pass.txt -i ~/ansible.hosts'
   end
 
   desc 'Provision ec2 instance'

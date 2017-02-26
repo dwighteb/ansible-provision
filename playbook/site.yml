@@ -1,5 +1,5 @@
 ---
-- hosts: mac-mini
+- hosts: mac
   remote_user: "{{ myuser | default('ubuntu') }}"
   become: yes
   become_method: sudo
