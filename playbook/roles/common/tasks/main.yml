@@ -9,30 +9,14 @@
     update_cache: yes
   with_items:
     - acpid
-    - fail2ban
     - libpam-google-authenticator
     - ntp
     - sysstat
 
-- name: configure fail2ban
-  copy:
-    src: fail2ban/jail.local
-    dest: /etc/fail2ban/jail.local
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - restart fail2ban
-
-- name: enable fail2ban long term jail
-  copy:
-    src: fail2ban/jail.d/recidive.conf
-    dest: /etc/fail2ban/jail.d/recidive.conf
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - restart fail2ban
+- name: ensure packags are not installed
+  apt:
+    name: fail2ban
+    state: absent
 
 - name: configure sudo
   copy:

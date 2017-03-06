@@ -2,7 +2,6 @@ require 'spec_helper'
 
 packages = [
   'acpid',
-  'fail2ban',
   'ntp',
   'openssh-server',
   'sysstat']
@@ -13,8 +12,11 @@ packages.each do |pkg|
   end
 end
 
+describe package('fail2ban') do
+  it { should_not be_installed }
+end
+
 services = [
-  'fail2ban',
   'ntp',
   'ssh']
 
@@ -23,6 +25,10 @@ services.each do |svc|
     it { should be_enabled }
     it { should be_running }
   end
+end
+
+describe service('fail2ban') do
+  it { should_not be_running }
 end
 
 describe port(22) do
@@ -34,21 +40,6 @@ describe 'Filesystems should have less than 80% of inodes in use' do
     describe command('/bin/df -iP ' + filesystem_attributes['mount'] + ' | /usr/bin/tail -n1 | awk \'{print $5}\''), if: filesystem_attributes['mount'] !~ %r{^(/dev$|/run$|/dev/shm$|/run/lock$|/sys/fs/cgroup$|/run/cgmanager/fs$|/run/user/|/boot/efi)} do
       its(:stdout) { is_expected.to match /^([0-9]|[0-7][0-9])%/ }
     end
-  end
-end
-
-describe "fail2ban configured correctly" do
-  describe file('/etc/fail2ban/jail.local') do
-    it { should exist }
-    it { should be_mode 644 }
-    it { should be_owned_by 'root' }
-    its(:content) { should match /^backend = auto/ }
-  end
-
-  describe file('/etc/fail2ban/jail.d/recidive.conf') do
-    it { should exist }
-    it { should be_mode 644 }
-    it { should be_owned_by 'root' }
   end
 end
 
@@ -69,7 +60,7 @@ describe "Google Authenticator configured correctly" do
   describe file('/home/ubuntu/.google_authenticator') do
     it { should exist }
     it { should be_mode 400 }
-    its(:md5sum) { should eq '4d847e27e6af638c3154b76d3698f325' }
+    its(:md5sum) { should eq 'ed27c9b45c68b6650f9388a12d23f894' }
   end
 end
 
