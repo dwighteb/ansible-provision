@@ -5,8 +5,13 @@ task :spec    => 'spec:all'
 task :default => :spec
 
 namespace 'ansible' do
+  desc 'Run ansible against aws systems'
+  task :aws do
+    sh 'ansible-playbook playbook/site.yml -l aws -v --vault-password-file ~/.vault_pass.txt -i ~/ansible.hosts'
+  end
+
   desc 'Run ansible against mac systems'
-  task 'mac' do
+  task :mac do
     sh 'ansible-playbook playbook/site.yml -l mac -v --vault-password-file ~/.vault_pass.txt -i ~/ansible.hosts'
   end
 
