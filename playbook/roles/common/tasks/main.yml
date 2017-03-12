@@ -13,7 +13,7 @@
     - ntp
     - sysstat
 
-- name: ensure packags are not installed
+- name: ensure packages are not installed
   apt:
     name: fail2ban
     state: absent
