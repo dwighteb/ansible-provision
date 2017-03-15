@@ -9,9 +9,11 @@
     update_cache: yes
   with_items:
     - acpid
+    - git
     - libpam-google-authenticator
     - ntp
     - sysstat
+    - zsh
 
 - name: ensure packages are not installed
   apt:
@@ -37,7 +39,7 @@
 - name: add my user ubuntu
   user:
     name: ubuntu
-    shell: /bin/bash
+    shell: /bin/zsh
     comment: ubuntu user
     password: "{{ ubuntu_password }}"
     groups: adm,sudo
@@ -55,6 +57,21 @@
     owner: ubuntu
     group: ubuntu
     mode: 0400
+
+- name: ubuntu download oh-my-zsh
+  command: git clone git://github.com/robbyrussell/oh-my-zsh.git /home/ubuntu/.oh-my-zsh
+  args:
+      creates: /home/ubuntu/.oh-my-zsh
+  become: true
+  become_user: ubuntu
+
+- name: ubuntu zshrc file
+  copy:
+    src: zshrc
+    dest: /home/ubuntu/.zshrc
+    owner: ubuntu
+    group: ubuntu
+    mode: 0644
 
 - name: configure pam.d sshd for google authenticator
   lineinfile:
