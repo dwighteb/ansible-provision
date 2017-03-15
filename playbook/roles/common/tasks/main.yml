@@ -13,12 +13,7 @@
     - libpam-google-authenticator
     - ntp
     - sysstat
-    - zsh
 
-- name: ensure packages are not installed
-  apt:
-    name: fail2ban
-    state: absent
 
 - name: configure sudo
   copy:
@@ -39,11 +34,16 @@
 - name: add my user ubuntu
   user:
     name: ubuntu
-    shell: /bin/zsh
+    shell: /bin/bash
     comment: ubuntu user
     password: "{{ ubuntu_password }}"
     groups: adm,sudo
     append: yes
+
+- name: ensure packages are not installed
+  apt:
+    name: zsh
+    state: absent
 
 - name: authorized key file for ubuntu
   authorized_key:
@@ -58,20 +58,13 @@
     group: ubuntu
     mode: 0400
 
-- name: ubuntu download oh-my-zsh
-  command: git clone git://github.com/robbyrussell/oh-my-zsh.git /home/ubuntu/.oh-my-zsh
-  args:
-      creates: /home/ubuntu/.oh-my-zsh
-  become: true
-  become_user: ubuntu
-
-- name: ubuntu zshrc file
-  copy:
-    src: zshrc
-    dest: /home/ubuntu/.zshrc
-    owner: ubuntu
-    group: ubuntu
-    mode: 0644
+- name: delete zsh configuration files
+  file:
+    path: /home/ubuntu/{{ item }}
+    state: absent
+  with_items:
+    - .oh-my-zsh
+    - .zshrc
 
 - name: configure pam.d sshd for google authenticator
   lineinfile:

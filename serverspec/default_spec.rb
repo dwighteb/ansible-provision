@@ -5,8 +5,7 @@ packages = [
   'git',
   'ntp',
   'openssh-server',
-  'sysstat',
-  'zsh']
+  'sysstat']
 
 packages.each do |pkg|
   describe package(pkg), :if => os[:family] == 'ubuntu' do
@@ -14,7 +13,7 @@ packages.each do |pkg|
   end
 end
 
-describe package('fail2ban') do
+describe package('zsh') do
   it { should_not be_installed }
 end
 
@@ -27,10 +26,6 @@ services.each do |svc|
     it { should be_enabled }
     it { should be_running }
   end
-end
-
-describe service('fail2ban') do
-  it { should_not be_running }
 end
 
 describe port(22) do
@@ -78,7 +73,7 @@ end
 describe "User ubuntu customized" do
   describe user('ubuntu') do
     it { should exist }
-    it { should have_login_shell '/bin/zsh' }
+    it { should have_login_shell '/bin/bash' }
     it { should have_home_directory '/home/ubuntu' }
     it { should have_authorized_key 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDEcL268vOj9Q5/2jRch6fulX/x7QsJ17zk3RA/yVyi/zxKdoIhvj6s4ioCiq4ojmEM2lRoC412adJDnab2uOVPmXoTi/vky3eMkV2EzFfWaJJgL+sC6cLFS6iYTLbwiHlo5RK9UWt19+E8qc3DUpKVCBPpjKYFe6AqyVYmsVh9AKZzRFwwHS6JABa90W3CQDUQSFdmq0yvgcuSZ0h5k7SJ24Dj1mM6K5deizvOkCfNsPDSSGN3qEKXLUPAckSdongmhGflW5asQunQ6or7gNx4ukSgUdPGD1AVH3djGNlCYJjYBAzchXN+0NgXEuZtxRe+sG3AGGtRYprId2a3OCM0RDeQr08vPmNzUpu+EWYE+2LHGLCK5GJMLb1hVo0JpjEGUmu7t4849x6Pj16YZXKfmbjQUchtPCIuIUIVEnyoWh2P6NC4j3mjNJEyCDuaNg4HfGAOaMXn+xgbyhRbVNRoPGJwFSxIDPagDAFGKm8PfLi4kAJKuDmDWKfMwUiWPqfiaR+gwrV1oM+BU6a5bvrdPysli8lP7aak4LE9dZE/v3zmZhPjvAlgDelXmNsoCqoRFo3FJt8RPhtLPaN2heofZoo9+0Ep9IBipVluJHr6T8IcTDAgLTMdmiaC8rPAaRyBC1DcZQfmtg/mcReRbX1AcuGSLhAeR2QQhdv2UJEpOQ== dwighteb@20160709.mbp3' }
     it { should have_authorized_key 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDKRdlc3uNB9Y+GadVPp/7BMfYgMAo1aI2ynbt2R6hnLFtliEonSa7nRU8IGPM1wfx80ki+kbcAeQm7gLUCYZx0EevwGQnEi8B08TRJ0jWgFYdymJcq8H2yFU1FyEkrZhbHLhS9QfiHvDc5/rO7q4Tpn+o0+lYfLCErGLztzGe8C+j8sky9TOsiBoYsinQVMnmo/P99wYXKnezf/b0IOgZozJgAbUWL3S0hJ/Y4GP2wUkR5xE9Oh8c34x7/T3Y4FQsQ9dUEDhN9EhosqdcR8yc5FdiPq+ppCcFgHeplX6oUdBdyj0VSBsk1vC5lhkRzx9vljWDrqe6Al9VipPBEKSawLrkzqDsg5YkkUqu8YpkpbnnAFuQAr7dIRtC7y3EHMF0RpTkrKOUlxNF/sZtWuISdnKUKkBY7YmbjDj/7Li/3k+Mxpfo4awEUuLoPp835jPGvxB9yZ4NyZPGcgmfkBWievY8rDlh9u46iR+Qg90NEJJtNJJehKBic6RuWHYO7N+WCFX1plImS1l7AQeQbrm84iX9aDDnuVQPfhy3L4QDhSRxYmGUzFihbgH8EN7bvYQsoVLsUkf+8mWpySoSvk3+RKzWtia5usSUJUhJGLqw/AU/2BYUTF6P6M9Rdd2c3GP4WN6ASLL6uYYJmtL+ZJqU6Zc8cv9e5sRdFfLR/sl82XQ== db-ipad-2017-02-18' }
@@ -86,15 +81,11 @@ describe "User ubuntu customized" do
     its(:encrypted_password) { should match(/^\$6\$.{8,16}\$.{86}$/) }
   end
 
-  describe file('/home/ubuntu/.oh-my-zsh') do
-    it { should be_directory }
-    it { should be_owned_by 'ubuntu' }
-  end
-
-  describe file ('/home/ubuntu/.zshrc') do
-    it { should be_file }
-    it { should be_owned_by 'ubuntu'}
-    it { should be_mode 644 }
-    its(:content) { should match %r!^\s*export ZSH=/home/ubuntu/.oh-my-zsh! }
+  describe 'Remove zsh configuration files' do
+    ['.oh-my-zsh', '.zshrc'].each do |the_file|
+      describe file(the_file) do
+        it { should_not exist }
+      end
+    end
   end
 end
