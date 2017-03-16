@@ -14,7 +14,6 @@
     - ntp
     - sysstat
 
-
 - name: configure sudo
   copy:
     content: "{{ sudoers_90_admin }}"
@@ -40,11 +39,6 @@
     groups: adm,sudo
     append: yes
 
-- name: ensure packages are not installed
-  apt:
-    name: zsh
-    state: absent
-
 - name: authorized key file for ubuntu
   authorized_key:
     user: ubuntu
@@ -57,14 +51,6 @@
     owner: ubuntu
     group: ubuntu
     mode: 0400
-
-- name: delete zsh configuration files
-  file:
-    path: /home/ubuntu/{{ item }}
-    state: absent
-  with_items:
-    - .oh-my-zsh
-    - .zshrc
 
 - name: configure pam.d sshd for google authenticator
   lineinfile:
