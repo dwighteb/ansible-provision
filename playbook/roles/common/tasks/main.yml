@@ -45,8 +45,16 @@
     key: '{{ item }}'
   with_file:
     - ssh_keys/db-mbp3-2016-07-09
-    - ssh_keys/db-ipad-2017-02-18
+    - ssh_keys/db-ipad-2017-04-16
     - ssh_keys/db-iphone-2017-02-18
+
+- name: remove old authorized keys for ubuntu
+  authorized_key:
+    user: ubuntu
+    key: '{{ item }}'
+    state: absent
+  with_file:
+    - ssh_keys/db-ipad-2017-02-18
 
 - name: ubuntu google authenticator file
   copy:
